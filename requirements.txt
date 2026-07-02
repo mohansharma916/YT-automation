@@ -1,0 +1,14 @@
+google-genai
+yt-dlp
+ffmpeg-python
+python-dotenv
+pydantic
+rich
+typer
+loguru
+requests
+google-genai
+pydantic-settings
+openai
+stable-ts
+faster-whisper

@@ -1,0 +1,2 @@
+file '/Users/user/Documents/Personal/Youtube_agent/output/long/hook.wav'
+file '/Users/user/Documents/Personal/Youtube_agent/audio/sample.wav'
