@@ -1,10 +1,5 @@
 import subprocess
 from pathlib import Path
-from unittest import result
-
-from click import command
-
-
 class FFmpegService:
 
     def burn_subtitles(
@@ -74,18 +69,6 @@ class FFmpegService:
 
         return float(result.stdout.strip())
     
-    def compose_video(
-        self,
-        video_path: Path,
-        audio_path: Path,
-        output_path: Path,
-    ):
-
-        self.replace_audio(
-            video_path=video_path,
-            audio_path=audio_path,
-            output_path=output_path,
-        )
     
     def cut_audio(
     self,
@@ -124,52 +107,6 @@ class FFmpegService:
         return output_path
     
 
-
-    def concat_audio(
-    self,
-    audio_files: list[Path],
-    output_path: Path):
-        
-        output_path.parent.mkdir(
-        parents=True,
-        exist_ok=True,)
-
-        concat_file = output_path.parent / "concat.txt"
-
-        concat_file.write_text(
-        "\n".join(
-            f"file '{file.resolve()}'"
-            for file in audio_files
-        )
-    )
-
-        command = [
-        "ffmpeg",
-        "-y",
-        "-f",
-        "concat",
-        "-safe",
-        "0",
-        "-i",
-        str(concat_file),
-        "-c",
-        "copy",
-        str(output_path),
-    ]
-
-        result = subprocess.run(
-        command,
-        capture_output=True,
-        text=True,
-        )
-
-        if result.returncode != 0:
-            raise RuntimeError(result.stderr)
-
-        return output_path
-    
-
-
     def cut_video(
     self,
     video_path: Path,
@@ -191,8 +128,12 @@ class FFmpegService:
         str(end),
         "-i",
         str(video_path),
-        "-c",
+        "-c:v",
+        "libx264",
+
+        "-c:a",
         "copy",
+
         str(output_path),
     ]
 
@@ -219,12 +160,14 @@ class FFmpegService:
         exist_ok=True,
     )
 
-        concat_file = output_path.parent / "videos.txt"
+        concat = output_path.parent / "videos.txt"
 
-        concat_file.write_text(
+        concat.write_text(
         "\n".join(
-            f"file '{video.resolve()}'"
-            for video in videos
+            [
+                f"file '{v.resolve()}'"
+                for v in videos
+            ]
         )
     )
 
@@ -236,7 +179,7 @@ class FFmpegService:
         "-safe",
         "0",
         "-i",
-        str(concat_file),
+        str(concat),
         "-c",
         "copy",
         str(output_path),
@@ -254,35 +197,44 @@ class FFmpegService:
         return output_path
 
 
-    def create_hook_audio(
+    def crop_to_vertical(
     self,
-    audio_path: Path,
-    hook_start: float,
-    hook_end: float,
+    video_path: Path,
     output_path: Path):
 
-        hook_audio = output_path.parent / "hook.wav"
-
-        self.cut_audio(
-        audio_path,
-        hook_start,
-        hook_end,
-        hook_audio,
-        )
-
-        self.concat_audio(
-        [
-            hook_audio,
-            audio_path,
-        ],
-        output_path,
+        output_path.parent.mkdir(
+        parents=True,
+        exist_ok=True,
     )
 
+        command = [
+        "ffmpeg",
+        "-y",
+        "-i",
+        str(video_path),
+
+        "-vf",
+        "crop=ih*9/16:ih,scale=1080:1920",
+
+         "-c:v",
+        "libx264",
+
+        "-c:a",
+        "copy",
+
+        str(output_path),
+    ]
+
+        result = subprocess.run(
+        command,
+        capture_output=True,
+        text=True,
+    )
+
+        if result.returncode != 0:
+         raise RuntimeError(result.stderr)
+
         return output_path
-
-
-
-
 
     def replace_audio(self,video_path: Path,
                             audio_path: Path,
@@ -308,8 +260,10 @@ class FFmpegService:
 
             "-c:a",
             "aac",
-
             "-shortest",
+
+            "-movflags",
+            "+faststart",
 
             str(output_path),
         ]
@@ -321,6 +275,53 @@ class FFmpegService:
 
         print(result.stdout)
         print(result.stderr)
+
+        if result.returncode != 0:
+            raise RuntimeError(result.stderr)
+        
+
+    
+    def prepend_video(
+    self,
+    hook_video: Path,
+    full_video: Path,
+    output_path: Path):
+
+        output_path.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+        concat_file = output_path.parent / "videos.txt"
+
+        concat_file.write_text(
+        "\n".join(
+            [
+                f"file '{hook_video.resolve()}'",
+                f"file '{full_video.resolve()}'",
+            ]
+        )
+    )
+
+        command = [
+        "ffmpeg",
+        "-y",
+        "-f",
+        "concat",
+        "-safe",
+        "0",
+        "-i",
+        str(concat_file),
+        "-c",
+        "copy",
+        str(output_path),
+    ]
+
+        result = subprocess.run(
+        command,
+        capture_output=True,
+        text=True,
+    )
 
         if result.returncode != 0:
             raise RuntimeError(result.stderr)

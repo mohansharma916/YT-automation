@@ -81,34 +81,36 @@ class SubtitleService:
             ]
         )
 
-    def create_hook_subtitle(
-        self,
-        subtitle: Subtitle,
-        hook_start: float,
-        hook_end: float,
-    ) -> Subtitle:
+    def create_final_subtitle(
+    self,
+    subtitle: Subtitle,
+    hook_start: float,
+    hook_end: float):
 
         hook = self.cut(
-            subtitle,
-            hook_start,
-            hook_end,
-        )
+        subtitle,
+        hook_start,
+        hook_end,
+    )
 
         hook = self.normalize(
-            hook,
-        )
+        hook,
+    )
 
         duration = hook_end - hook_start
 
         original = self.shift(
-            subtitle,
-            duration,
-        )
+        subtitle,
+        duration,
+       )
 
-        return self.merge(
-            hook,
-            original,
-        )
+        return Subtitle(
+        segments=[
+            *hook.segments,
+            *original.segments,
+        ]
+    )
+
 
     def save_json(
         self,

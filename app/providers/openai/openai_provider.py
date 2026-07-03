@@ -1,52 +1,43 @@
 import json
-from urllib import response
+
 
 from openai import OpenAI
 from app.config.settings import settings
-from app.models import subtitle
 from app.models.metadata import Metadata
 from app.models.short import Shorts
 from app.models.subtitle import Subtitle, SubtitleSegment
 from app.models.transcript import Transcript
 from app.providers.base.ai_provider import AIProvider
-import json
-
 from app.models.hook import ViralHook
-from app.models.subtitle import Subtitle
 
 
 class OpenAIProvider(AIProvider):
-
     def __init__(self):
 
-        self.client = OpenAI(
-            api_key=settings.openai_api_key
-        )
+        self.client = OpenAI(api_key=settings.openai_api_key)
 
     def transcribe(self, audio_path):
 
-            with open(audio_path, "rb") as audio:
-
-                response = self.client.audio.transcriptions.create(
+        with open(audio_path, "rb") as audio:
+            response = self.client.audio.transcriptions.create(
                 model=settings.transcription_model,
                 file=audio,
                 response_format="verbose_json",
                 timestamp_granularities=["segment"],
             )
 
-            subtitle = Subtitle(
+        subtitle = Subtitle(
             segments=[
-            SubtitleSegment(
-                start=segment.start,
-                end=segment.end,
-                text=segment.text,
-            )
-            for segment in response.segments
-        ]
-    )
+                SubtitleSegment(
+                    start=segment.start,
+                    end=segment.end,
+                    text=segment.text,
+                )
+                for segment in response.segments
+            ]
+        )
 
-            return subtitle
-
+        return subtitle
 
     def generate_subtitles(
         self,
@@ -82,36 +73,28 @@ Transcript:
 """
 
         response = self.client.responses.create(
-
             model=settings.chat_model,
-
             input=prompt,
-
         )
 
         content = response.output_text
         print("========== OpenAI Response ==========")
         if content.startswith("```"):
-
-            content = (
-                content
-                .replace("```json", "")
-                .replace("```", "")
-                .strip()
-            )
+            content = content.replace("```json", "").replace("```", "").strip()
 
             data = json.loads(content)
 
             return Subtitle.model_validate(data)
-        
-    def find_hook(self,subtitle: Subtitle) -> ViralHook:
 
-            subtitle_json = json.dumps(
+    def find_hook(self, subtitle: Subtitle) -> ViralHook:
+
+        subtitle_json = json.dumps(
             subtitle.model_dump(),
             ensure_ascii=False,
-            indent=2,)
+            indent=2,
+        )
 
-            prompt = f"""
+        prompt = f"""
 You are an expert viral content editor.
 
 Below is a subtitle JSON with timestamps.
@@ -141,38 +124,31 @@ Subtitle:
 {subtitle_json}
         """
 
-            response = self.client.responses.create(
-        model=settings.chat_model,
-        input=prompt,
+        response = self.client.responses.create(
+            model=settings.chat_model,
+            input=prompt,
         )
 
-            content = response.output_text.strip()
+        content = response.output_text.strip()
 
-            if content.startswith("```"):
-             content = (
-             content
-            .replace("```json", "")
-            .replace("```", "")
-            .strip()
-        )
+        if content.startswith("```"):
+            content = content.replace("```json", "").replace("```", "").strip()
 
-            data = json.loads(content)
+        data = json.loads(content)
 
-            return ViralHook.model_validate(data) 
-    
+        return ViralHook.model_validate(data)
 
-
-    def generate_metadata(self,subtitle: Subtitle,shorts: Shorts,) -> Metadata:
-        subtitle_json = json.dumps(
-        subtitle.model_dump(),
-        ensure_ascii=False,
-        indent=2)
+    def generate_metadata(
+        self,
+        subtitle: Subtitle,
+        shorts: Shorts,
+    ) -> Metadata:
+        subtitle_json = json.dumps(subtitle.model_dump(), ensure_ascii=False, indent=2)
         shorts_json = json.dumps(
             shorts.model_dump(),
             ensure_ascii=False,
             indent=2,
         )
-
 
         prompt = f"""
         You are an expert YouTube SEO specialist.
@@ -216,32 +192,29 @@ Subtitle:
         """
 
         response = self.client.responses.create(
-        model=settings.chat_model,
-        input=prompt,
-    )
+            model=settings.chat_model,
+            input=prompt,
+        )
 
         content = response.output_text.strip()
 
         if content.startswith("```"):
-          content = (
-              content
-            .replace("```json", "")
-            .replace("```", "")
-            .strip())
-          
-          data = json.loads(content)
+            content = content.replace("```json", "").replace("```", "").strip()
+
+        data = json.loads(content)
 
         return Metadata.model_validate(data)
-    
 
-
-    def generate_shorts(self,subtitle: Subtitle,) -> Shorts:
+    def generate_shorts(
+        self,
+        subtitle: Subtitle,
+    ) -> Shorts:
 
         subtitle_json = json.dumps(
             subtitle.model_dump(),
             ensure_ascii=False,
             indent=2,
-                )
+        )
 
         prompt = f"""
 You are an expert YouTube Shorts editor.
@@ -279,22 +252,13 @@ Subtitle JSON:
         response = self.client.responses.create(
             model=settings.chat_model,
             input=prompt,
-            )
+        )
 
         content = response.output_text.strip()
 
         if content.startswith("```"):
-          content = (
-            content
-            .replace("```json", "")
-            .replace("```", "")
-            .strip()
-        )
+            content = content.replace("```json", "").replace("```", "").strip()
 
         data = json.loads(content)
 
         return Shorts.model_validate(data)
-    
-
-
-    
