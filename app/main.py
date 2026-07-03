@@ -8,6 +8,7 @@ def main():
 
     context = JobContext(
         youtube_url="https://www.youtube.com/watch?v=aYIq2efHS94",
+        local_audio=Path("audio/sample.wav"),
     )
 
     pipeline = VideoPipeline()
@@ -15,13 +16,9 @@ def main():
     result = pipeline.run(context)
 
     if result.success:
-
         print("\n✅ Pipeline Completed Successfully\n")
-
     else:
-
         print("\n❌ Pipeline Failed\n")
-
         print(result.error)
 
 
