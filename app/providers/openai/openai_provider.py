@@ -4,6 +4,7 @@ from urllib import response
 from openai import OpenAI
 from app.config.settings import settings
 from app.models import subtitle
+from app.models.metadata import Metadata
 from app.models.short import Shorts
 from app.models.subtitle import Subtitle, SubtitleSegment
 from app.models.transcript import Transcript
@@ -138,7 +139,7 @@ Format:
 Subtitle:
 
 {subtitle_json}
-"""
+        """
 
             response = self.client.responses.create(
         model=settings.chat_model,
@@ -158,6 +159,79 @@ Subtitle:
             data = json.loads(content)
 
             return ViralHook.model_validate(data) 
+    
+
+
+    def generate_metadata(self,subtitle: Subtitle,shorts: Shorts,) -> Metadata:
+        subtitle_json = json.dumps(
+        subtitle.model_dump(),
+        ensure_ascii=False,
+        indent=2)
+        shorts_json = json.dumps(
+            shorts.model_dump(),
+            ensure_ascii=False,
+            indent=2,
+        )
+
+
+        prompt = f"""
+        You are an expert YouTube SEO specialist.
+
+        Generate metadata for:
+
+        1. Long YouTube Video
+        2. Every Short.
+
+        Rules:
+
+        - High CTR title
+        - SEO optimized description
+        - 10 relevant hashtags
+        - Return ONLY JSON
+
+        Format:
+
+        {{
+            "long_video": {{
+                "title": "...",
+                "description": "...",
+                "hashtags": []
+            }},
+            "shorts": [
+                {{
+                    "title": "...",
+                    "description": "...",
+                    "hashtags": []
+                }}
+            ]
+        }}
+
+        Subtitle:
+
+        {subtitle_json}
+
+        Shorts:
+
+        {shorts_json}
+        """
+
+        response = self.client.responses.create(
+        model=settings.chat_model,
+        input=prompt,
+    )
+
+        content = response.output_text.strip()
+
+        if content.startswith("```"):
+          content = (
+              content
+            .replace("```json", "")
+            .replace("```", "")
+            .strip())
+          
+          data = json.loads(content)
+
+        return Metadata.model_validate(data)
     
 
 
@@ -220,3 +294,7 @@ Subtitle JSON:
         data = json.loads(content)
 
         return Shorts.model_validate(data)
+    
+
+
+    

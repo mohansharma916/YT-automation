@@ -442,3 +442,50 @@
 2026-07-02 22:09:05.486 | SUCCESS  | app.agents.base_agent:success:18 - [ShortsAgent] Completed
 2026-07-02 22:09:05.487 | INFO     | app.orchestrator.video_pipeline:run:54 - Executing RenderAgent
 2026-07-02 22:09:05.487 | INFO     | app.agents.base_agent:log_start:37 - [RenderAgent] Started
+2026-07-03 08:45:52.253 | INFO     | app.orchestrator.video_pipeline:run:28 - Starting Video Pipeline
+2026-07-03 08:45:52.254 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing DownloadAgent
+2026-07-03 08:45:52.254 | INFO     | app.agents.base_agent:log_start:37 - [DownloadAgent] Started
+2026-07-03 08:45:52.254 | INFO     | app.agents.download_agent:execute:24 - Downloading video: https://www.youtube.com/watch?v=aYIq2efHS94
+2026-07-03 08:45:54.206 | INFO     | app.agents.download_agent:execute:57 - Downloaded video: downloads/Unko Bhi Humse Mohabbat Ho Jaruri To Nahi (Cover) ｜ Soulful Ghazal.mp4
+2026-07-03 08:45:54.206 | SUCCESS  | app.agents.base_agent:success:18 - [DownloadAgent] Completed
+2026-07-03 08:45:54.207 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing TranscriptionAgent
+2026-07-03 09:09:19.739 | INFO     | app.orchestrator.video_pipeline:run:28 - Starting Video Pipeline
+2026-07-03 09:09:19.739 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing DownloadAgent
+2026-07-03 09:09:19.739 | INFO     | app.agents.base_agent:log_start:37 - [DownloadAgent] Started
+2026-07-03 09:09:19.740 | INFO     | app.agents.download_agent:execute:24 - Downloading video: https://www.youtube.com/watch?v=aYIq2efHS94
+2026-07-03 09:09:21.649 | INFO     | app.agents.download_agent:execute:57 - Downloaded video: downloads/Unko Bhi Humse Mohabbat Ho Jaruri To Nahi (Cover) ｜ Soulful Ghazal.mp4
+2026-07-03 09:09:21.649 | SUCCESS  | app.agents.base_agent:success:18 - [DownloadAgent] Completed
+2026-07-03 09:09:21.650 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing TranscriptionAgent
+2026-07-03 09:09:21.650 | INFO     | app.agents.base_agent:log_start:37 - [TranscriptionAgent] Started
+2026-07-03 09:11:34.654 | INFO     | app.orchestrator.video_pipeline:run:28 - Starting Video Pipeline
+2026-07-03 09:11:34.655 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing DownloadAgent
+2026-07-03 09:11:34.655 | INFO     | app.agents.base_agent:log_start:37 - [DownloadAgent] Started
+2026-07-03 09:11:34.655 | INFO     | app.agents.download_agent:execute:24 - Downloading video: https://www.youtube.com/watch?v=aYIq2efHS94
+2026-07-03 09:11:36.192 | INFO     | app.agents.download_agent:execute:57 - Downloaded video: downloads/Unko Bhi Humse Mohabbat Ho Jaruri To Nahi (Cover) ｜ Soulful Ghazal.mp4
+2026-07-03 09:11:36.192 | SUCCESS  | app.agents.base_agent:success:18 - [DownloadAgent] Completed
+2026-07-03 09:11:36.192 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing TranscriptionAgent
+2026-07-03 09:11:36.192 | INFO     | app.agents.base_agent:log_start:37 - [TranscriptionAgent] Started
+2026-07-03 09:14:08.413 | INFO     | app.orchestrator.video_pipeline:run:28 - Starting Video Pipeline
+2026-07-03 09:14:08.414 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing DownloadAgent
+2026-07-03 09:14:08.414 | INFO     | app.agents.base_agent:log_start:37 - [DownloadAgent] Started
+2026-07-03 09:14:08.414 | INFO     | app.agents.download_agent:execute:24 - Downloading video: https://www.youtube.com/watch?v=aYIq2efHS94
+2026-07-03 09:14:09.828 | INFO     | app.agents.download_agent:execute:57 - Downloaded video: downloads/Unko Bhi Humse Mohabbat Ho Jaruri To Nahi (Cover) ｜ Soulful Ghazal.mp4
+2026-07-03 09:14:09.829 | SUCCESS  | app.agents.base_agent:success:18 - [DownloadAgent] Completed
+2026-07-03 09:14:09.829 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing TranscriptionAgent
+2026-07-03 09:14:09.829 | INFO     | app.agents.base_agent:log_start:37 - [TranscriptionAgent] Started
+2026-07-03 09:15:36.847 | INFO     | app.orchestrator.video_pipeline:run:28 - Starting Video Pipeline
+2026-07-03 09:15:36.848 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing DownloadAgent
+2026-07-03 09:15:36.848 | INFO     | app.agents.base_agent:log_start:37 - [DownloadAgent] Started
+2026-07-03 09:15:36.848 | INFO     | app.agents.download_agent:execute:37 - Downloading video: https://www.youtube.com/watch?v=aYIq2efHS94
+2026-07-03 09:15:40.835 | INFO     | app.agents.download_agent:execute:97 - Downloaded video: downloads/Unko Bhi Humse Mohabbat Ho Jaruri To Nahi (Cover) ｜ Soulful Ghazal.mp4
+2026-07-03 09:15:40.835 | INFO     | app.agents.download_agent:execute:101 - Extracted audio: audio/sample.wav
+2026-07-03 09:15:40.835 | SUCCESS  | app.agents.base_agent:success:18 - [DownloadAgent] Completed
+2026-07-03 09:15:40.836 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing TranscriptionAgent
+2026-07-03 09:15:40.836 | INFO     | app.agents.base_agent:log_start:37 - [TranscriptionAgent] Started
+2026-07-03 09:15:53.189 | SUCCESS  | app.agents.base_agent:success:18 - [TranscriptionAgent] Completed
+2026-07-03 09:15:53.194 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing HookAgent
+2026-07-03 09:15:57.907 | SUCCESS  | app.agents.base_agent:success:18 - [HookAgent] Completed
+2026-07-03 09:15:57.908 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing ShortsAgent
+2026-07-03 09:16:02.541 | SUCCESS  | app.agents.base_agent:success:18 - [ShortsAgent] Completed
+2026-07-03 09:16:02.541 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing RenderAgent
+2026-07-03 09:16:02.542 | INFO     | app.agents.base_agent:log_start:37 - [RenderAgent] Started

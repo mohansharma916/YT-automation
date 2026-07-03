@@ -1,4 +1,5 @@
 from pathlib import Path
+import subprocess
 
 from yt_dlp import YoutubeDL
 
@@ -18,19 +19,30 @@ class DownloadAgent(BaseAgent):
         if not context.youtube_url:
             return self.failure(
                 context,
-                "YouTube URL not provided."
+                "YouTube URL not provided.",
             )
+
+        output_dir = Path("downloads")
+        output_dir.mkdir(
+            parents=True,
+            exist_ok=True,
+        )
+
+        audio_dir = Path("audio")
+        audio_dir.mkdir(
+            parents=True,
+            exist_ok=True,
+        )
 
         logger.info(
             f"Downloading video: {context.youtube_url}"
         )
 
-        output_dir = Path("downloads")
-        output_dir.mkdir(parents=True, exist_ok=True)
-
         ydl_opts = {
             "format": "bestvideo+bestaudio/best",
-            "outtmpl": str(output_dir / "%(title)s.%(ext)s"),
+            "outtmpl": str(
+                output_dir / "%(title)s.%(ext)s"
+            ),
             "merge_output_format": "mp4",
         }
 
@@ -41,13 +53,41 @@ class DownloadAgent(BaseAgent):
                 download=True,
             )
 
-            downloaded_file = Path(
+            downloaded_video = Path(
                 ydl.prepare_filename(info)
             ).with_suffix(".mp4")
 
-        # ---------- Update Context ----------
+        ####################################################
+        # Extract Audio
+        ####################################################
 
-        context.downloaded_video = downloaded_file
+        audio_file = audio_dir / "sample.wav"
+
+        command = [
+            "ffmpeg",
+            "-y",
+            "-i",
+            str(downloaded_video),
+            "-vn",
+            "-ac",
+            "1",
+            "-ar",
+            "16000",
+            str(audio_file),
+        ]
+
+        subprocess.run(
+            command,
+            check=True,
+            capture_output=True,
+        )
+
+        ####################################################
+        # Context
+        ####################################################
+
+        context.downloaded_video = downloaded_video
+        context.local_audio = audio_file
 
         context.metadata["title"] = info["title"]
         context.metadata["video_id"] = info["id"]
@@ -55,7 +95,11 @@ class DownloadAgent(BaseAgent):
         context.metadata["duration"] = info["duration"]
 
         logger.info(
-            f"Downloaded video: {downloaded_file}"
+            f"Downloaded video: {downloaded_video}"
+        )
+
+        logger.info(
+            f"Extracted audio: {audio_file}"
         )
 
         return self.success(context)

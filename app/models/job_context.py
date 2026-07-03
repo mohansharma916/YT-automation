@@ -1,6 +1,7 @@
 from pathlib import Path
 from typing import Optional
 
+from openai.types import Metadata
 from pydantic import BaseModel
 from pydantic import Field
 from app.models.hook import ViralHook
@@ -30,3 +31,4 @@ class JobContext(BaseModel):
     transcript_file: Optional[Path] = None
     video_with_new_audio: Optional[Path] = None
     timeline: Timeline | None = None
+    metadata_ai: Metadata | None = None

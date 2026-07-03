@@ -1,6 +1,7 @@
 from app.agents.base_agent import BaseAgent
 from app.models.job_context import JobContext
-from app.providers.factory.provider_factory import ProviderFactory
+from app.providers.factory.ai_provider_factory import AIProviderFactory
+
 
 
 class ShortsAgent(BaseAgent):
@@ -9,7 +10,7 @@ class ShortsAgent(BaseAgent):
 
     def __init__(self):
 
-        self.provider = ProviderFactory.create()
+        self.provider = AIProviderFactory.create()
 
     def execute(self, context: JobContext):
 

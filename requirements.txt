@@ -12,3 +12,7 @@ pydantic-settings
 openai
 stable-ts
 faster-whisper
+google-api-python-client
+google-auth-oauthlib
+google-auth-httplib2
+sarvamai
