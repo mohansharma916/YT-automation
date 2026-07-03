@@ -1,4 +1,5 @@
 from pathlib import Path
+from tempfile import TemporaryDirectory
 
 from app.agents.base_agent import BaseAgent
 from app.models.job_context import JobContext
@@ -11,6 +12,7 @@ class RenderAgent(BaseAgent):
     name = "RenderAgent"
 
     def __init__(self):
+
         self.ffmpeg = FFmpegService()
         self.subtitle = SubtitleService()
 
@@ -21,171 +23,183 @@ class RenderAgent(BaseAgent):
 
         self.log_start()
 
-        if context.hook is None:
-            raise ValueError("Hook not found.")
-
-        if context.shorts is None:
-            raise ValueError("Shorts not found.")
-
-        if context.subtitle is None:
-            raise ValueError("Subtitle not found.")
+        if context.downloaded_video is None:
+            raise ValueError("Background video missing.")
 
         if context.local_audio is None:
-            raise ValueError("Audio not found.")
+            raise ValueError("Audio missing.")
 
-        if context.downloaded_video is None:
-            raise ValueError("Background video not found.")
+        if context.subtitle is None:
+            raise ValueError("Subtitle missing.")
 
-        long_dir = Path("output/long")
-        shorts_dir = Path("output/shorts")
+        if context.hook is None:
+            raise ValueError("Hook missing.")
 
-        long_dir.mkdir(
+        if context.shorts is None:
+            raise ValueError("Shorts missing.")
+
+        output_long = Path("output/long")
+        output_short = Path("output/shorts")
+
+        output_long.mkdir(
             parents=True,
             exist_ok=True,
         )
 
-        shorts_dir.mkdir(
+        output_short.mkdir(
             parents=True,
             exist_ok=True,
         )
 
-        ####################################################
-        # LONG VIDEO
-        ####################################################
+        with TemporaryDirectory() as temp:
 
-        print("\nCreating Long Video...\n")
-
-        hook_audio = long_dir / "audio.wav"
-
-        self.ffmpeg.create_hook_audio(
-            audio_path=context.local_audio,
-            hook_start=context.hook.start,
-            hook_end=context.hook.end,
-            output_path=hook_audio,
-        )
-
-        hook_subtitle = self.subtitle.create_hook_subtitle(
-            subtitle=context.subtitle,
-            hook_start=context.hook.start,
-            hook_end=context.hook.end,
-        )
-
-        hook_ass = long_dir / "subtitle.ass"
-
-        self.subtitle.save_ass(
-            hook_subtitle,
-            hook_ass,
-        )
-
-        temp_video = long_dir / "temp.mp4"
-
-        self.ffmpeg.replace_audio(
-            video_path=context.downloaded_video,
-            audio_path=hook_audio,
-            output_path=temp_video,
-        )
-
-        final_video = long_dir / "final.mp4"
-
-        self.ffmpeg.burn_subtitles(
-            video_path=temp_video,
-            subtitle_path=hook_ass,
-            output_path=final_video,
-        )
-
-        context.output_video = final_video
-
-        ####################################################
-        # SHORTS
-        ####################################################
-
-        print("\nCreating Shorts...\n")
-
-        for index, short in enumerate(
-            context.shorts.shorts,
-            start=1,
-        ):
-
-            print(
-                f"Creating Short {index} ({short.start} - {short.end})"
-            )
-
-            short_dir = shorts_dir / f"short_{index}"
-
-            short_dir.mkdir(
-                parents=True,
-                exist_ok=True,
-            )
+            temp = Path(temp)
 
             ####################################################
-            # Audio
+            # LONG VIDEO
             ####################################################
 
-            short_audio = short_dir / "audio.wav"
+            duration = self.ffmpeg.get_duration(
+                context.local_audio,
+            )
+
+            loop_video = temp / "loop.mp4"
+
+            self.ffmpeg.loop_video(
+                video_path=context.downloaded_video,
+                duration=duration,
+                output_path=loop_video,
+            )
+
+            hook_audio = temp / "hook.wav"
 
             self.ffmpeg.cut_audio(
                 audio_path=context.local_audio,
-                start=short.start,
-                end=short.end,
-                output_path=short_audio,
+                start=context.hook.start,
+                end=context.hook.end,
+                output_path=hook_audio,
             )
 
-            ####################################################
-            # Subtitle
-            ####################################################
+            final_audio = temp / "final.wav"
 
-            short_subtitle = self.subtitle.cut(
+            self.ffmpeg.concat_audio(
+                [
+                    hook_audio,
+                    context.local_audio,
+                ],
+                final_audio,
+            )
+
+            final_subtitle = self.subtitle.create_final_subtitle(
                 subtitle=context.subtitle,
-                start=short.start,
-                end=short.end,
+                hook_start=context.hook.start,
+                hook_end=context.hook.end,
             )
 
-            short_subtitle = self.subtitle.normalize(
-                short_subtitle,
-            )
-
-            short_ass = short_dir / "subtitle.ass"
+            subtitle_ass = temp / "subtitle.ass"
 
             self.subtitle.save_ass(
-                short_subtitle,
-                short_ass,
+                final_subtitle,
+                subtitle_ass,
             )
 
-            ####################################################
-            # Background Video
-            ####################################################
-
-            short_video = short_dir / "background.mp4"
-
-            self.ffmpeg.cut_video(
-                video_path=context.downloaded_video,
-                start=0,
-                end=short.end - short.start,
-                output_path=short_video,
-            )
-
-            ####################################################
-            # Replace Audio
-            ####################################################
-
-            temp_video = short_dir / "temp.mp4"
+            temp_video = temp / "video.mp4"
 
             self.ffmpeg.replace_audio(
-                video_path=short_video,
-                audio_path=short_audio,
+                video_path=loop_video,
+                audio_path=final_audio,
                 output_path=temp_video,
             )
 
-            ####################################################
-            # Burn Subtitle
-            ####################################################
+            final_video = output_long / "final.mp4"
 
             self.ffmpeg.burn_subtitles(
                 video_path=temp_video,
-                subtitle_path=short_ass,
-                output_path=short_dir / "video.mp4",
+                subtitle_path=subtitle_ass,
+                output_path=final_video,
             )
 
-      
-        print("\n✅ Rendering Completed\n")
+            context.output_video = final_video
+
+            ####################################################
+            # SHORTS
+            ####################################################
+
+            for index, short in enumerate(
+                context.shorts.shorts,
+                start=1,
+            ):
+
+                short_duration = (
+                    short.end - short.start
+                )
+
+                short_loop = temp / f"loop_{index}.mp4"
+
+                self.ffmpeg.loop_video(
+                    video_path=context.downloaded_video,
+                    duration=short_duration,
+                    output_path=short_loop,
+                )
+
+                vertical_video = temp / f"vertical_{index}.mp4"
+
+                self.ffmpeg.crop_to_vertical(
+                    video_path=short_loop,
+                    output_path=vertical_video,
+                )
+
+                short_audio = temp / f"audio_{index}.wav"
+
+                self.ffmpeg.cut_audio(
+                    audio_path=context.local_audio,
+                    start=short.start,
+                    end=short.end,
+                    output_path=short_audio,
+                )
+
+                short_subtitle = self.subtitle.create_short_subtitle(
+                    subtitle=context.subtitle,
+                    start=short.start,
+                    end=short.end,
+                )
+
+                short_ass = temp / f"subtitle_{index}.ass"
+
+                self.subtitle.save_ass(
+                    short_subtitle,
+                    short_ass,
+                )
+
+                short_temp = temp / f"temp_{index}.mp4"
+
+                self.ffmpeg.replace_audio(
+                    video_path=vertical_video,
+                    audio_path=short_audio,
+                    output_path=short_temp,
+                )
+
+                short_output = (
+                    output_short / f"short_{index}.mp4"
+                )
+
+                self.ffmpeg.burn_subtitles(
+                    video_path=short_temp,
+                    subtitle_path=short_ass,
+                    output_path=short_output,
+                )
+
+                print(
+                    f"✅ Short {index} Rendered"
+                )
+
+                            ####################################################
+            # DONE
+            ####################################################
+
+            print("\n====================================")
+            print("✅ Long Video Rendered")
+            print("✅ Shorts Rendered")
+            print("====================================\n")
+
         return self.success(context)

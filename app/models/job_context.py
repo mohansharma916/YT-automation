@@ -15,6 +15,7 @@ from app.models.subtitle import Subtitle
 class Transcript(BaseModel):
     text: str
 
+
 class JobContext(BaseModel):
     youtube_url: Optional[str] = None
     metadata: dict = Field(default_factory=dict)
@@ -32,3 +33,5 @@ class JobContext(BaseModel):
     video_with_new_audio: Optional[Path] = None
     timeline: Timeline | None = None
     metadata_ai: Metadata | None = None
+    final_audio: Path | None = None
+    final_subtitle: Path | None = None

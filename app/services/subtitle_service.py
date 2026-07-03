@@ -1,11 +1,16 @@
 import json
 from pathlib import Path
 
-from app.models.subtitle import Subtitle, SubtitleSegment
+from app.models.subtitle import Subtitle
+from app.models.subtitle import SubtitleSegment
 from app.renderers.ass_renderer import ASSRenderer
 
 
 class SubtitleService:
+
+    ####################################################
+    # Basic Operations
+    ####################################################
 
     def cut(
         self,
@@ -43,14 +48,23 @@ class SubtitleService:
     ) -> Subtitle:
 
         return Subtitle(
+
             segments=[
+
                 SubtitleSegment(
+
                     start=segment.start + seconds,
+
                     end=segment.end + seconds,
+
                     text=segment.text,
+
                 )
+
                 for segment in subtitle.segments
+
             ]
+
         )
 
     def normalize(
@@ -58,15 +72,19 @@ class SubtitleService:
         subtitle: Subtitle,
     ) -> Subtitle:
 
-        if not subtitle.segments:
+        if len(subtitle.segments) == 0:
             return subtitle
 
-        first = subtitle.segments[0].start
+        offset = subtitle.segments[0].start
 
         return self.shift(
             subtitle,
-            -first,
+            -offset,
         )
+
+    ####################################################
+    # Merge
+    ####################################################
 
     def merge(
         self,
@@ -75,42 +93,74 @@ class SubtitleService:
     ) -> Subtitle:
 
         return Subtitle(
+
             segments=[
+
                 *first.segments,
+
                 *second.segments,
+
             ]
+
         )
 
+    ####################################################
+    # Long Video Subtitle
+    ####################################################
+
     def create_final_subtitle(
-    self,
-    subtitle: Subtitle,
-    hook_start: float,
-    hook_end: float):
+        self,
+        subtitle: Subtitle,
+        hook_start: float,
+        hook_end: float,
+    ) -> Subtitle:
 
         hook = self.cut(
-        subtitle,
-        hook_start,
-        hook_end,
-    )
+            subtitle,
+            hook_start,
+            hook_end,
+        )
 
         hook = self.normalize(
-        hook,
-    )
+            hook,
+        )
 
-        duration = hook_end - hook_start
+        hook_duration = hook_end - hook_start
 
         original = self.shift(
-        subtitle,
-        duration,
-       )
+            subtitle,
+            hook_duration,
+        )
 
-        return Subtitle(
-        segments=[
-            *hook.segments,
-            *original.segments,
-        ]
-    )
+        return self.merge(
+            hook,
+            original,
+        )
 
+    ####################################################
+    # Shorts
+    ####################################################
+
+    def create_short_subtitle(
+        self,
+        subtitle: Subtitle,
+        start: float,
+        end: float,
+    ) -> Subtitle:
+
+        short = self.cut(
+            subtitle,
+            start,
+            end,
+        )
+
+        return self.normalize(
+            short,
+        )
+
+    ####################################################
+    # Save
+    ####################################################
 
     def save_json(
         self,
@@ -124,12 +174,19 @@ class SubtitleService:
         )
 
         output.write_text(
+
             json.dumps(
+
                 subtitle.model_dump(),
+
                 ensure_ascii=False,
+
                 indent=4,
+
             ),
+
             encoding="utf-8",
+
         )
 
     def save_ass(
@@ -138,9 +195,12 @@ class SubtitleService:
         output: Path,
     ):
 
-        renderer = ASSRenderer()
+        output.parent.mkdir(
+            parents=True,
+            exist_ok=True,
+        )
 
-        renderer.render(
+        ASSRenderer().render(
             subtitle,
             output,
         )
