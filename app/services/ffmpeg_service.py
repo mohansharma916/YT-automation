@@ -127,7 +127,7 @@ class FFmpegService:
                 "-i",
                 str(video_path),
                 "-vf",
-                "crop=ih*9/16:ih,scale=1080:1920",
+                "scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920",
                 "-c:v",
                 "libx264",
                 "-c:a",
@@ -203,8 +203,8 @@ class FFmpegService:
                 "0",
                 "-i",
                 str(concat),
-                "-c",
-                "copy",
+                "-c:a",
+                "pcm_s16le",
                 str(output_path),
             ]
         )

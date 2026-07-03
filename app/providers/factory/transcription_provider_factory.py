@@ -1,9 +1,10 @@
+from app.providers.transcription.deeogram_provider import DeepgramProvider
 from app.providers.transcription.sarvam_provider import SarvamProvider
 
 
 class TranscriptionProviderFactory:
 
     @staticmethod
-    def create():
+    def transcription():
 
-        return SarvamProvider()
+        return DeepgramProvider()

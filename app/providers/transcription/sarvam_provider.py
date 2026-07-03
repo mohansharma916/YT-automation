@@ -62,6 +62,17 @@ class SarvamProvider(TranscriptionProvider):
 
         data = requests.get(download_url).json()
         print(json.dumps(data, indent=4, ensure_ascii=False))
+        print("=" * 80)
+        print("=" * 80)
+        print("WORDS:", len(data["timestamps"]["words"]))
+        print("STARTS:", len(data["timestamps"]["start_time_seconds"]))
+        print("ENDS:", len(data["timestamps"]["end_time_seconds"]))
+        print("=" * 80)
+        print(data.keys())
+
+        with open("sarvam_response.json", "w", encoding="utf-8") as f:
+           json.dump(data, f, ensure_ascii=False, indent=2)
+
 
         return self.parse(data)
 

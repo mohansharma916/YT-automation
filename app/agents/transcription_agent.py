@@ -3,9 +3,8 @@ from pathlib import Path
 
 from app.agents.base_agent import BaseAgent
 from app.models.job_context import JobContext
-from app.providers.factory.transcription_provider_factory import (
-    TranscriptionProviderFactory,
-)
+from app.providers.factory.provider_factory import ProviderFactory
+
 
 
 class TranscriptionAgent(BaseAgent):
@@ -13,7 +12,7 @@ class TranscriptionAgent(BaseAgent):
 
     def __init__(self):
 
-        self.provider = TranscriptionProviderFactory.create()
+       self.provider = ProviderFactory.transcription()
 
     def execute(
         self,
@@ -34,6 +33,10 @@ class TranscriptionAgent(BaseAgent):
         print("Audio :", context.local_audio)
 
         context.subtitle = subtitle
+
+        print("=" * 80)
+        print("TOTAL SEGMENTS:", len(subtitle.segments))
+        print("=" * 80)
 
         Path("subtitles").mkdir(
             exist_ok=True,

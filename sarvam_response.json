@@ -1,0 +1,18 @@
+{
+  "request_id": "20260703_8ac766dd-e705-4836-b4d3-11fbf31542b7",
+  "transcript": "कुछ नहीं वैसे है तो सोचा हुआ है हमने आ गया होगा।",
+  "timestamps": {
+    "words": [
+      "कुछ नहीं वैसे है तो सोचा हुआ है हमने आ गया होगा।"
+    ],
+    "start_time_seconds": [
+      0.45
+    ],
+    "end_time_seconds": [
+      3.17
+    ]
+  },
+  "diarized_transcript": null,
+  "language_code": "hi-IN",
+  "language_probability": null
+}

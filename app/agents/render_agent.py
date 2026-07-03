@@ -90,11 +90,15 @@ class RenderAgent(BaseAgent):
                 final_audio,
             )
 
+            print("INPUT SEGMENTS:", len(context.subtitle.segments))
+
             final_subtitle = self.subtitle.create_final_subtitle(
                 subtitle=context.subtitle,
                 hook_start=context.hook.start,
                 hook_end=context.hook.end,
             )
+
+            print("FINAL SEGMENTS:", len(final_subtitle.segments))
 
             subtitle_ass = temp / "subtitle.ass"
 

@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     transcription_model: str = "whisper-1"
 
     chat_model: str = "gpt-4.1-mini"
+    deepgram_api_key: str
     sarvam_api_key: str
     sarvam_base_url: str
     transcription_provider: str = "openai"
