@@ -10,17 +10,32 @@ class TimelineAgent(BaseAgent):
 
     def __init__(self):
 
-        self.timeline_service = TimelineService()
         self.ffmpeg = FFmpegService()
+        self.timeline = TimelineService()
 
-    def execute(self, context: JobContext):
+    def execute(
+        self,
+        context: JobContext,
+    ):
 
-        context.timeline = self.timeline_service.create(
-            audio=context.local_audio,
-            subtitle=context.subtitle,
-            duration=self.ffmpeg.get_duration(
-                context.local_audio
-            ),
+        self.log_start()
+
+        if context.local_audio is None:
+            raise ValueError("Audio not found.")
+
+        duration = self.ffmpeg.get_duration(
+            context.local_audio,
+        )
+
+        print(f"Audio Duration : {duration:.2f} sec")
+
+        context.video_parts = self.timeline.split(
+            duration=duration,
+            part_duration=300,
+        )
+
+        print(
+            f"Total Parts : {len(context.video_parts.parts)}"
         )
 
         return self.success(context)

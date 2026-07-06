@@ -4,12 +4,11 @@ from typing import Optional
 from openai.types import Metadata
 from pydantic import BaseModel
 from pydantic import Field
-from app.models.hook import ViralHook
 from app.models.short import Shorts
 from app.models.timeline import Timeline
 from app.models.transcript import Transcript
-from pydantic import BaseModel
 from app.models.subtitle import Subtitle
+from app.models.video_parts import VideoParts
 
 
 class Transcript(BaseModel):
@@ -26,7 +25,6 @@ class JobContext(BaseModel):
     subtitle_ass_file: Optional[Path] = None
     transcript: Optional[Transcript] = None
     subtitle_file: Path | None = None
-    hook: ViralHook | None = None
     output_video: Optional[Path] = None
     shorts: Shorts | None = None
     transcript_file: Optional[Path] = None
@@ -35,3 +33,4 @@ class JobContext(BaseModel):
     metadata_ai: Metadata | None = None
     final_audio: Path | None = None
     final_subtitle: Path | None = None
+    video_parts: VideoParts | None = None

@@ -1,6 +1,6 @@
-from app.agents.hook_agent import HookAgent
 from app.agents.metadata_agent import MetadataAgent
 # from app.agents.upload_agent import UploadAgent
+from app.agents.timeline_agent import TimelineAgent
 from app.utils.logger import logger
 from app.agents.download_agent import DownloadAgent
 from app.agents.transcription_agent import TranscriptionAgent
@@ -16,10 +16,10 @@ class VideoPipeline:
         self.agents = [
             DownloadAgent(),
             TranscriptionAgent(),
-            HookAgent(),
+            TimelineAgent(),
             ShortsAgent(),
-            RenderAgent(),
             MetadataAgent(),
+            RenderAgent(),
             # UploadAgent(),
         ]
 

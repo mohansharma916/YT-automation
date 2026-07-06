@@ -1,8 +1,6 @@
 from pathlib import Path
 
 from pydantic import BaseModel
-
-from app.models.hook import ViralHook
 from app.models.short import Shorts
 from app.models.subtitle import Subtitle
 

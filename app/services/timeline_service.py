@@ -1,101 +1,47 @@
-from copy import deepcopy
-from pathlib import Path
+import math
 
-from app.models.subtitle import Subtitle, SubtitleSegment
-from app.models.timeline import Timeline
+from app.models.video_part import VideoPart
+from app.models.video_parts import VideoParts
 
 
 class TimelineService:
 
-    def create(
+    def split(
         self,
-        audio: Path,
-        subtitle: Subtitle,
         duration: float,
-    ) -> Timeline:
+        part_duration: float = 300,
+    ) -> VideoParts:
 
-        return Timeline(
-            audio=audio,
-            subtitle=subtitle,
-            duration=duration,
+        total_parts = math.ceil(
+            duration / part_duration,
         )
 
-    def shift(
-        self,
-        subtitle: Subtitle,
-        seconds: float,
-    ) -> Subtitle:
+        parts = []
 
-        segments = []
+        for index in range(total_parts):
 
-        for segment in subtitle.segments:
+            start = index * part_duration
 
-            segments.append(
-                SubtitleSegment(
-                    start=segment.start + seconds,
-                    end=segment.end + seconds,
-                    text=segment.text,
-                )
+            end = min(
+                start + part_duration,
+                duration,
             )
 
-        return Subtitle(
-            segments=segments
-        )
+            parts.append(
 
-    def trim(
-        self,
-        subtitle: Subtitle,
-        start: float,
-        end: float,
-    ) -> Subtitle:
+                VideoPart(
 
-        segments = []
+                    part=index + 1,
 
-        for segment in subtitle.segments:
+                    start=start,
 
-            if segment.end < start:
-                continue
+                    end=end,
 
-            if segment.start > end:
-                continue
-
-            segments.append(
-                SubtitleSegment(
-                    start=max(segment.start, start),
-                    end=min(segment.end, end),
-                    text=segment.text,
+                    title=f"Part {index + 1}",
                 )
+
             )
 
-        return Subtitle(
-            segments=segments
+        return VideoParts(
+            parts=parts,
         )
-
-    def normalize(
-        self,
-        subtitle: Subtitle,
-    ) -> Subtitle:
-
-        if not subtitle.segments:
-            return subtitle
-
-        first = subtitle.segments[0].start
-
-        return self.shift(
-            subtitle,
-            -first,
-        )
-
-    def merge(
-        self,
-        first: Subtitle,
-        second: Subtitle,
-    ) -> Subtitle:
-
-        result = deepcopy(first)
-
-        result.segments.extend(
-            second.segments
-        )
-
-        return result
