@@ -774,3 +774,163 @@
 2026-07-06 21:07:46.296 | SUCCESS  | app.agents.base_agent:success:18 - [MetadataAgent] Completed
 2026-07-06 21:07:46.298 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing RenderAgent
 2026-07-06 21:07:46.298 | INFO     | app.agents.base_agent:log_start:37 - [RenderAgent] Started
+2026-07-06 21:10:02.477 | SUCCESS  | app.agents.base_agent:success:18 - [RenderAgent] Completed
+2026-07-06 21:10:02.481 | SUCCESS  | app.orchestrator.video_pipeline:run:42 - Video Pipeline Completed
+2026-07-06 21:13:17.793 | INFO     | app.orchestrator.video_pipeline:run:28 - Starting Video Pipeline
+2026-07-06 21:13:17.794 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing DownloadAgent
+2026-07-06 21:13:17.794 | INFO     | app.agents.base_agent:log_start:37 - [DownloadAgent] Started
+2026-07-06 21:13:19.723 | SUCCESS  | app.agents.base_agent:success:18 - [DownloadAgent] Completed
+2026-07-06 21:13:19.724 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing TranscriptionAgent
+2026-07-06 21:13:19.724 | INFO     | app.agents.base_agent:log_start:37 - [TranscriptionAgent] Started
+2026-07-06 21:13:37.243 | SUCCESS  | app.agents.base_agent:success:18 - [TranscriptionAgent] Completed
+2026-07-06 21:13:37.244 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing TimelineAgent
+2026-07-06 21:13:37.244 | INFO     | app.agents.base_agent:log_start:37 - [TimelineAgent] Started
+2026-07-06 21:13:37.417 | SUCCESS  | app.agents.base_agent:success:18 - [TimelineAgent] Completed
+2026-07-06 21:13:37.417 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing ShortsAgent
+2026-07-06 21:13:54.911 | SUCCESS  | app.agents.base_agent:success:18 - [ShortsAgent] Completed
+2026-07-06 21:13:54.911 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing MetadataAgent
+2026-07-06 21:14:54.652 | SUCCESS  | app.agents.base_agent:success:18 - [MetadataAgent] Completed
+2026-07-06 21:14:54.654 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing RenderAgent
+2026-07-06 21:14:54.654 | INFO     | app.agents.base_agent:log_start:37 - [RenderAgent] Started
+2026-07-06 21:17:20.767 | SUCCESS  | app.agents.base_agent:success:18 - [RenderAgent] Completed
+2026-07-06 21:17:20.774 | SUCCESS  | app.orchestrator.video_pipeline:run:42 - Video Pipeline Completed
+2026-07-06 21:18:14.789 | INFO     | app.orchestrator.video_pipeline:run:28 - Starting Video Pipeline
+2026-07-06 21:18:14.790 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing DownloadAgent
+2026-07-06 21:18:14.790 | INFO     | app.agents.base_agent:log_start:37 - [DownloadAgent] Started
+2026-07-06 21:18:16.912 | SUCCESS  | app.agents.base_agent:success:18 - [DownloadAgent] Completed
+2026-07-06 21:18:16.913 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing TranscriptionAgent
+2026-07-06 21:18:16.913 | INFO     | app.agents.base_agent:log_start:37 - [TranscriptionAgent] Started
+2026-07-06 21:18:36.751 | SUCCESS  | app.agents.base_agent:success:18 - [TranscriptionAgent] Completed
+2026-07-06 21:18:36.752 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing TimelineAgent
+2026-07-06 21:18:36.752 | INFO     | app.agents.base_agent:log_start:37 - [TimelineAgent] Started
+2026-07-06 21:18:36.953 | SUCCESS  | app.agents.base_agent:success:18 - [TimelineAgent] Completed
+2026-07-06 21:18:36.953 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing ShortsAgent
+2026-07-06 21:18:53.241 | SUCCESS  | app.agents.base_agent:success:18 - [ShortsAgent] Completed
+2026-07-06 21:18:53.242 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing MetadataAgent
+2026-07-06 21:19:54.294 | SUCCESS  | app.agents.base_agent:success:18 - [MetadataAgent] Completed
+2026-07-06 21:19:54.296 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing RenderAgent
+2026-07-06 21:19:54.296 | INFO     | app.agents.base_agent:log_start:37 - [RenderAgent] Started
+2026-07-06 21:22:28.820 | SUCCESS  | app.agents.base_agent:success:18 - [RenderAgent] Completed
+2026-07-06 21:22:28.824 | SUCCESS  | app.orchestrator.video_pipeline:run:42 - Video Pipeline Completed
+2026-07-06 21:25:59.737 | INFO     | app.orchestrator.video_pipeline:run:28 - Starting Video Pipeline
+2026-07-06 21:25:59.738 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing DownloadAgent
+2026-07-06 21:25:59.738 | INFO     | app.agents.base_agent:log_start:37 - [DownloadAgent] Started
+2026-07-06 21:26:01.546 | SUCCESS  | app.agents.base_agent:success:18 - [DownloadAgent] Completed
+2026-07-06 21:26:01.546 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing TranscriptionAgent
+2026-07-06 21:26:01.546 | INFO     | app.agents.base_agent:log_start:37 - [TranscriptionAgent] Started
+2026-07-06 21:26:09.486 | SUCCESS  | app.agents.base_agent:success:18 - [TranscriptionAgent] Completed
+2026-07-06 21:26:09.486 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing TimelineAgent
+2026-07-06 21:26:09.486 | INFO     | app.agents.base_agent:log_start:37 - [TimelineAgent] Started
+2026-07-06 21:26:09.581 | SUCCESS  | app.agents.base_agent:success:18 - [TimelineAgent] Completed
+2026-07-06 21:26:09.582 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing ShortsAgent
+2026-07-06 21:26:22.391 | SUCCESS  | app.agents.base_agent:success:18 - [ShortsAgent] Completed
+2026-07-06 21:26:22.392 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing MetadataAgent
+2026-07-06 21:27:44.713 | SUCCESS  | app.agents.base_agent:success:18 - [MetadataAgent] Completed
+2026-07-06 21:27:44.716 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing RenderAgent
+2026-07-06 21:27:44.716 | INFO     | app.agents.base_agent:log_start:37 - [RenderAgent] Started
+2026-07-06 21:30:14.312 | SUCCESS  | app.agents.base_agent:success:18 - [RenderAgent] Completed
+2026-07-06 21:30:14.318 | SUCCESS  | app.orchestrator.video_pipeline:run:42 - Video Pipeline Completed
+2026-07-06 21:31:03.783 | INFO     | app.orchestrator.video_pipeline:run:28 - Starting Video Pipeline
+2026-07-06 21:31:03.784 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing DownloadAgent
+2026-07-06 21:31:03.784 | INFO     | app.agents.base_agent:log_start:37 - [DownloadAgent] Started
+2026-07-06 21:31:05.755 | SUCCESS  | app.agents.base_agent:success:18 - [DownloadAgent] Completed
+2026-07-06 21:31:05.756 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing TranscriptionAgent
+2026-07-06 21:31:05.756 | INFO     | app.agents.base_agent:log_start:37 - [TranscriptionAgent] Started
+2026-07-06 21:31:15.671 | SUCCESS  | app.agents.base_agent:success:18 - [TranscriptionAgent] Completed
+2026-07-06 21:31:15.671 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing TimelineAgent
+2026-07-06 21:31:15.671 | INFO     | app.agents.base_agent:log_start:37 - [TimelineAgent] Started
+2026-07-06 21:31:15.854 | SUCCESS  | app.agents.base_agent:success:18 - [TimelineAgent] Completed
+2026-07-06 21:31:15.854 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing ShortsAgent
+2026-07-06 21:31:55.665 | SUCCESS  | app.agents.base_agent:success:18 - [ShortsAgent] Completed
+2026-07-06 21:31:55.671 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing MetadataAgent
+2026-07-06 21:32:34.059 | SUCCESS  | app.agents.base_agent:success:18 - [MetadataAgent] Completed
+2026-07-06 21:32:34.061 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing RenderAgent
+2026-07-06 21:32:34.061 | INFO     | app.agents.base_agent:log_start:37 - [RenderAgent] Started
+2026-07-06 21:34:46.241 | INFO     | app.orchestrator.video_pipeline:run:28 - Starting Video Pipeline
+2026-07-06 21:34:46.242 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing DownloadAgent
+2026-07-06 21:34:46.242 | INFO     | app.agents.base_agent:log_start:37 - [DownloadAgent] Started
+2026-07-06 21:34:47.926 | SUCCESS  | app.agents.base_agent:success:18 - [DownloadAgent] Completed
+2026-07-06 21:34:47.927 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing TranscriptionAgent
+2026-07-06 21:34:47.927 | INFO     | app.agents.base_agent:log_start:37 - [TranscriptionAgent] Started
+2026-07-06 21:35:04.288 | SUCCESS  | app.agents.base_agent:success:18 - [TranscriptionAgent] Completed
+2026-07-06 21:35:04.289 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing TimelineAgent
+2026-07-06 21:35:04.289 | INFO     | app.agents.base_agent:log_start:37 - [TimelineAgent] Started
+2026-07-06 21:35:04.462 | SUCCESS  | app.agents.base_agent:success:18 - [TimelineAgent] Completed
+2026-07-06 21:35:04.462 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing ShortsAgent
+2026-07-06 21:35:32.389 | SUCCESS  | app.agents.base_agent:success:18 - [ShortsAgent] Completed
+2026-07-06 21:35:32.390 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing MetadataAgent
+2026-07-06 21:37:36.232 | SUCCESS  | app.agents.base_agent:success:18 - [MetadataAgent] Completed
+2026-07-06 21:37:36.234 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing RenderAgent
+2026-07-06 21:37:36.235 | INFO     | app.agents.base_agent:log_start:37 - [RenderAgent] Started
+2026-07-06 21:40:18.008 | SUCCESS  | app.agents.base_agent:success:18 - [RenderAgent] Completed
+2026-07-06 21:40:18.031 | SUCCESS  | app.orchestrator.video_pipeline:run:42 - Video Pipeline Completed
+2026-07-06 21:45:38.684 | INFO     | app.orchestrator.video_pipeline:run:28 - Starting Video Pipeline
+2026-07-06 21:45:38.685 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing DownloadAgent
+2026-07-06 21:45:38.685 | INFO     | app.agents.base_agent:log_start:37 - [DownloadAgent] Started
+2026-07-06 21:45:40.480 | SUCCESS  | app.agents.base_agent:success:18 - [DownloadAgent] Completed
+2026-07-06 21:45:40.480 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing TranscriptionAgent
+2026-07-06 21:45:40.480 | INFO     | app.agents.base_agent:log_start:37 - [TranscriptionAgent] Started
+2026-07-06 21:45:49.812 | SUCCESS  | app.agents.base_agent:success:18 - [TranscriptionAgent] Completed
+2026-07-06 21:45:49.813 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing TimelineAgent
+2026-07-06 21:45:49.813 | INFO     | app.agents.base_agent:log_start:37 - [TimelineAgent] Started
+2026-07-06 21:45:49.905 | SUCCESS  | app.agents.base_agent:success:18 - [TimelineAgent] Completed
+2026-07-06 21:45:49.905 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing ShortsAgent
+2026-07-06 21:46:06.063 | SUCCESS  | app.agents.base_agent:success:18 - [ShortsAgent] Completed
+2026-07-06 21:46:06.064 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing MetadataAgent
+2026-07-06 21:46:30.209 | SUCCESS  | app.agents.base_agent:success:18 - [MetadataAgent] Completed
+2026-07-06 21:46:30.210 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing RenderAgent
+2026-07-06 21:46:30.210 | INFO     | app.agents.base_agent:log_start:37 - [RenderAgent] Started
+2026-07-06 21:48:29.357 | SUCCESS  | app.agents.base_agent:success:18 - [RenderAgent] Completed
+2026-07-06 21:48:29.371 | SUCCESS  | app.orchestrator.video_pipeline:run:42 - Video Pipeline Completed
+2026-07-06 21:49:37.354 | INFO     | app.orchestrator.video_pipeline:run:28 - Starting Video Pipeline
+2026-07-06 21:49:37.355 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing DownloadAgent
+2026-07-06 21:49:37.355 | INFO     | app.agents.base_agent:log_start:37 - [DownloadAgent] Started
+2026-07-06 21:49:38.942 | SUCCESS  | app.agents.base_agent:success:18 - [DownloadAgent] Completed
+2026-07-06 21:49:38.942 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing TranscriptionAgent
+2026-07-06 21:49:38.942 | INFO     | app.agents.base_agent:log_start:37 - [TranscriptionAgent] Started
+2026-07-06 21:49:48.526 | SUCCESS  | app.agents.base_agent:success:18 - [TranscriptionAgent] Completed
+2026-07-06 21:49:48.527 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing TimelineAgent
+2026-07-06 21:49:48.527 | INFO     | app.agents.base_agent:log_start:37 - [TimelineAgent] Started
+2026-07-06 21:49:48.694 | SUCCESS  | app.agents.base_agent:success:18 - [TimelineAgent] Completed
+2026-07-06 21:49:48.694 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing ShortsAgent
+2026-07-06 21:50:00.309 | SUCCESS  | app.agents.base_agent:success:18 - [ShortsAgent] Completed
+2026-07-06 21:50:00.310 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing MetadataAgent
+2026-07-06 21:50:32.819 | SUCCESS  | app.agents.base_agent:success:18 - [MetadataAgent] Completed
+2026-07-06 21:50:32.821 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing RenderAgent
+2026-07-06 21:50:32.821 | INFO     | app.agents.base_agent:log_start:37 - [RenderAgent] Started
+2026-07-06 21:52:52.907 | SUCCESS  | app.agents.base_agent:success:18 - [RenderAgent] Completed
+2026-07-06 21:52:52.917 | SUCCESS  | app.orchestrator.video_pipeline:run:42 - Video Pipeline Completed
+2026-07-06 21:53:33.300 | INFO     | app.orchestrator.video_pipeline:run:28 - Starting Video Pipeline
+2026-07-06 21:53:33.301 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing DownloadAgent
+2026-07-06 21:53:33.301 | INFO     | app.agents.base_agent:log_start:37 - [DownloadAgent] Started
+2026-07-06 21:53:34.833 | SUCCESS  | app.agents.base_agent:success:18 - [DownloadAgent] Completed
+2026-07-06 21:53:34.833 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing TranscriptionAgent
+2026-07-06 21:53:34.833 | INFO     | app.agents.base_agent:log_start:37 - [TranscriptionAgent] Started
+2026-07-06 21:53:43.166 | SUCCESS  | app.agents.base_agent:success:18 - [TranscriptionAgent] Completed
+2026-07-06 21:53:43.166 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing TimelineAgent
+2026-07-06 21:53:43.166 | INFO     | app.agents.base_agent:log_start:37 - [TimelineAgent] Started
+2026-07-06 21:53:43.267 | SUCCESS  | app.agents.base_agent:success:18 - [TimelineAgent] Completed
+2026-07-06 21:53:43.267 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing ShortsAgent
+2026-07-06 21:53:54.919 | SUCCESS  | app.agents.base_agent:success:18 - [ShortsAgent] Completed
+2026-07-06 21:53:54.920 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing MetadataAgent
+2026-07-06 21:54:22.937 | SUCCESS  | app.agents.base_agent:success:18 - [MetadataAgent] Completed
+2026-07-06 21:54:22.938 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing RenderAgent
+2026-07-06 21:54:22.938 | INFO     | app.agents.base_agent:log_start:37 - [RenderAgent] Started
+2026-07-06 21:56:22.028 | SUCCESS  | app.agents.base_agent:success:18 - [RenderAgent] Completed
+2026-07-06 21:56:22.032 | SUCCESS  | app.orchestrator.video_pipeline:run:42 - Video Pipeline Completed
+2026-07-06 22:11:03.161 | INFO     | app.orchestrator.video_pipeline:run:28 - Starting Video Pipeline
+2026-07-06 22:11:03.162 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing DownloadAgent
+2026-07-06 22:11:03.162 | INFO     | app.agents.base_agent:log_start:37 - [DownloadAgent] Started
+2026-07-06 22:11:04.993 | SUCCESS  | app.agents.base_agent:success:18 - [DownloadAgent] Completed
+2026-07-06 22:11:04.993 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing TranscriptionAgent
+2026-07-06 22:11:04.993 | INFO     | app.agents.base_agent:log_start:37 - [TranscriptionAgent] Started
+2026-07-06 22:11:18.533 | SUCCESS  | app.agents.base_agent:success:18 - [TranscriptionAgent] Completed
+2026-07-06 22:11:18.533 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing TimelineAgent
+2026-07-06 22:11:18.533 | INFO     | app.agents.base_agent:log_start:37 - [TimelineAgent] Started
+2026-07-06 22:11:18.689 | SUCCESS  | app.agents.base_agent:success:18 - [TimelineAgent] Completed
+2026-07-06 22:11:18.689 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing ShortsAgent
+2026-07-06 22:11:36.927 | SUCCESS  | app.agents.base_agent:success:18 - [ShortsAgent] Completed
+2026-07-06 22:11:36.927 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing MetadataAgent
+2026-07-06 22:12:04.599 | SUCCESS  | app.agents.base_agent:success:18 - [MetadataAgent] Completed
+2026-07-06 22:12:04.600 | INFO     | app.orchestrator.video_pipeline:run:31 - Executing RenderAgent
+2026-07-06 22:12:04.600 | INFO     | app.agents.base_agent:log_start:37 - [RenderAgent] Started

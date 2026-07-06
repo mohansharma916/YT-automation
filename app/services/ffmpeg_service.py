@@ -3,7 +3,6 @@ from pathlib import Path
 
 
 class FFmpegService:
-
     def _run(self, command: list[str]):
 
         result = subprocess.run(
@@ -76,39 +75,36 @@ class FFmpegService:
         return output_path
 
     def cut_video(
-    self,
-    video_path: Path,
-    start: float,
-    end: float,
-    output_path: Path,):
-        
+        self,
+        video_path: Path,
+        start: float,
+        end: float,
+        output_path: Path,
+    ):
+
         output_path.parent.mkdir(
-        parents=True,
-        exist_ok=True,)
+            parents=True,
+            exist_ok=True,
+        )
 
         self._run(
-        [
-            "ffmpeg",
-            "-y",
-
-            "-ss",
-            str(start),
-
-            "-to",
-            str(end),
-
-            "-i",
-            str(video_path),
-
-            "-c",
-            "copy",
-
-            str(output_path),
-        ]
-    )
+            [
+                "ffmpeg",
+                "-y",
+                "-ss",
+                str(start),
+                "-to",
+                str(end),
+                "-i",
+                str(video_path),
+                "-c",
+                "copy",
+                str(output_path),
+            ]
+        )
 
         return output_path
-    
+
     def crop_to_vertical(
         self,
         video_path: Path,
@@ -142,8 +138,6 @@ class FFmpegService:
     # Audio
     ########################################################
 
-
-  
     def cut_audio(
         self,
         audio_path: Path,
@@ -188,12 +182,7 @@ class FFmpegService:
 
         concat = output_path.parent / "audio_concat.txt"
 
-        concat.write_text(
-            "\n".join(
-                f"file '{file.resolve()}'"
-                for file in audio_files
-            )
-        )
+        concat.write_text("\n".join(f"file '{file.resolve()}'" for file in audio_files))
 
         self._run(
             [
@@ -230,100 +219,79 @@ class FFmpegService:
     ):
 
         output_file.parent.mkdir(
-        parents=True,
-        exist_ok=True,
-    )
-
-        if vertical:
-
-            video_filter = (
-            "scale=1080:1920:"
-            "force_original_aspect_ratio=increase,"
-            "crop=1080:1920,"
-            f"ass={subtitle_file}"
+            parents=True,
+            exist_ok=True,
         )
 
-        else:
+        if vertical:
+            video_filter = (
+                "scale=1080:1920:"
+                "force_original_aspect_ratio=increase,"
+                "crop=1080:1920,"
+                f"ass={subtitle_file}:original_size=1080x1920"
+            )
 
-            video_filter = f"ass={subtitle_file}"
+        else:
+            video_filter = f"ass={subtitle_file}:original_size=1920x1080"
 
         self._run(
-        [
-            "ffmpeg",
-            "-y",
-
-            ####################################################
-            # Cut Background Video
-            ####################################################
-            "-ss",
-            str(start),
-
-            "-to",
-            str(end),
-
-            "-i",
-            str(background_video),
-
-            ####################################################
-            # Podcast Audio
-            ####################################################
-            "-i",
-            str(podcast_audio),
-
-            ####################################################
-            # Filters
-            ####################################################
-            "-vf",
-            video_filter,
-
-            ####################################################
-            # Streams
-            ####################################################
-            "-map",
-            "0:v:0",
-
-            "-map",
-            "1:a:0",
-
-            ####################################################
-            # Video
-            ####################################################
-            "-c:v",
-            "libx264",
-
-            "-preset",
-            "ultrafast",
-
-            "-crf",
-            "28",
-
-            "-pix_fmt",
-            "yuv420p",
-
-            ####################################################
-            # Audio
-            ####################################################
-            "-c:a",
-            "aac",
-
-            "-b:a",
-            "192k",
-
-            ####################################################
-            # Finish
-            ####################################################
-            "-shortest",
-
-            "-movflags",
-            "+faststart",
-
-            "-threads",
-            "0",
-
-            str(output_file),
-        ]
-    )
+            [
+                "ffmpeg",
+                "-y",
+                ####################################################
+                # Cut Background Video
+                ####################################################
+                "-ss",
+                str(start),
+                "-to",
+                str(end),
+                "-i",
+                str(background_video),
+                ####################################################
+                # Podcast Audio
+                ####################################################
+                "-i",
+                str(podcast_audio),
+                ####################################################
+                # Filters
+                ####################################################
+                "-vf",
+                video_filter,
+                ####################################################
+                # Streams
+                ####################################################
+                "-map",
+                "0:v:0",
+                "-map",
+                "1:a:0",
+                ####################################################
+                # Video
+                ####################################################
+                "-c:v",
+                "libx264",
+                "-preset",
+                "ultrafast",
+                "-crf",
+                "28",
+                "-pix_fmt",
+                "yuv420p",
+                ####################################################
+                # Audio
+                ####################################################
+                "-c:a",
+                "aac",
+                "-b:a",
+                "192k",
+                ####################################################
+                # Finish
+                ####################################################
+                "-shortest",
+                "-movflags",
+                "+faststart",
+                "-threads",
+                "0",
+                str(output_file),
+            ]
+        )
 
         return output_file
-
-   

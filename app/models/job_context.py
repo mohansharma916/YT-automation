@@ -35,5 +35,5 @@ class JobContext(BaseModel):
     background_video: Path | None = None
     audio_duration: float | None = None
     background_video_url: str | None = None
-    output_long_videos: list[Path] = []
-    output_short_videos: list[Path] = []
+    output_long_videos: list[Path] = Field(default_factory=list)
+    output_short_videos: list[Path] = Field(default_factory=list)
