@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 
+from app.models import subtitle
 from app.models.subtitle import Subtitle
 from app.models.subtitle import SubtitleSegment
 from app.renderers.ass_renderer import ASSRenderer
@@ -204,3 +205,61 @@ class SubtitleService:
             subtitle,
             output,
         )
+
+
+  
+
+
+    def export_ass(
+    self,
+    subtitle,
+    output_file: Path,):
+
+        output_file.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+        lines = []
+
+        lines.append("[Script Info]")
+        lines.append("Title: Youtube Agent")
+        lines.append("ScriptType: v4.00+")
+        lines.append("")
+
+        lines.append("[V4+ Styles]")
+        lines.append("Format: Name,Fontname,Fontsize,PrimaryColour,SecondaryColour,OutlineColour,BackColour,Bold,Italic,Underline,StrikeOut,ScaleX,ScaleY,Spacing,Angle,BorderStyle,Outline,Shadow,Alignment,MarginL,MarginR,MarginV,Encoding")
+        lines.append(
+        "Style: Default,Poppins,28,&H00FFFFFF,&H0000FFFF,&H00000000,&H64000000,-1,0,0,0,100,100,0,0,1,2,1,2,20,20,40,1"
+    )
+
+        lines.append("")
+        lines.append("[Events]")
+        lines.append(
+        "Format: Layer,Start,End,Style,Name,MarginL,MarginR,MarginV,Effect,Text"
+    )
+
+        for segment in subtitle.segments:
+            
+
+            lines.append(
+                f"Dialogue: 0,{self.ass_time(segment.start)},{self.ass_time(segment.end)},Default,,0,0,0,,{segment.text}"
+            )
+
+        output_file.write_text(
+        "\n".join(lines),
+        encoding="utf-8",
+    )
+        
+
+    def ass_time(
+    self,
+    seconds: float,):
+
+        hours = int(seconds // 3600)
+
+        minutes = int((seconds % 3600) // 60)
+
+        secs = seconds % 60
+
+        return f"{hours}:{minutes:02}:{secs:05.2f}"

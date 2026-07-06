@@ -76,38 +76,39 @@ class FFmpegService:
         return output_path
 
     def cut_video(
-        self,
-        video_path: Path,
-        start: float,
-        end: float,
-        output_path: Path,
-    ):
-
+    self,
+    video_path: Path,
+    start: float,
+    end: float,
+    output_path: Path,):
+        
         output_path.parent.mkdir(
-            parents=True,
-            exist_ok=True,
-        )
+        parents=True,
+        exist_ok=True,)
 
         self._run(
-            [
-                "ffmpeg",
-                "-y",
-                "-ss",
-                str(start),
-                "-to",
-                str(end),
-                "-i",
-                str(video_path),
-                "-c:v",
-                "libx264",
-                "-c:a",
-                "copy",
-                str(output_path),
-            ]
-        )
+        [
+            "ffmpeg",
+            "-y",
+
+            "-ss",
+            str(start),
+
+            "-to",
+            str(end),
+
+            "-i",
+            str(video_path),
+
+            "-c",
+            "copy",
+
+            str(output_path),
+        ]
+    )
 
         return output_path
-
+    
     def crop_to_vertical(
         self,
         video_path: Path,
@@ -142,36 +143,7 @@ class FFmpegService:
     ########################################################
 
 
-    def remove_audio(
-    self,
-    video_path: Path,
-    output_path: Path,):
-        
-
-        output_path.parent.mkdir(
-        parents=True,
-        exist_ok=True,
-    )
-
-        self.run(
-        [
-            "ffmpeg",
-            "-y",
-
-            "-i",
-            str(video_path),
-
-            "-c:v",
-            "copy",
-
-            "-an",
-
-            str(output_path),
-        ]
-    )
-
-        return output_path
-
+  
     def cut_audio(
         self,
         audio_path: Path,
@@ -246,68 +218,112 @@ class FFmpegService:
     ########################################################
     # Render
     ########################################################
-
-    def replace_audio(
+    def render_video(
         self,
-        video_path: Path,
-        audio_path: Path,
-        output_path: Path,
+        background_video: Path,
+        podcast_audio: Path,
+        subtitle_file: Path,
+        output_file: Path,
+        start: float,
+        end: float,
+        vertical: bool = False,
     ):
 
-        output_path.parent.mkdir(
-            parents=True,
-            exist_ok=True,
+        output_file.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+        if vertical:
+
+            video_filter = (
+            "scale=1080:1920:"
+            "force_original_aspect_ratio=increase,"
+            "crop=1080:1920,"
+            f"ass={subtitle_file}"
         )
+
+        else:
+
+            video_filter = f"ass={subtitle_file}"
 
         self._run(
-            [
-                "ffmpeg",
-                "-y",
-                "-i",
-                str(video_path),
-                "-i",
-                str(audio_path),
-                "-map",
-                "0:v:0",
-                "-map",
-                "1:a:0",
-                "-c:v",
-                "copy",
-                "-c:a",
-                "aac",
-                "-shortest",
-                "-movflags",
-                "+faststart",
-                str(output_path),
-            ]
-        )
+        [
+            "ffmpeg",
+            "-y",
 
-        return output_path
+            ####################################################
+            # Cut Background Video
+            ####################################################
+            "-ss",
+            str(start),
 
-    def burn_subtitles(
-        self,
-        video_path: Path,
-        subtitle_path: Path,
-        output_path: Path,
-    ):
+            "-to",
+            str(end),
 
-        output_path.parent.mkdir(
-            parents=True,
-            exist_ok=True,
-        )
+            "-i",
+            str(background_video),
 
-        self._run(
-            [
-                "ffmpeg",
-                "-y",
-                "-i",
-                str(video_path),
-                "-vf",
-                f"ass={subtitle_path}",
-                "-c:a",
-                "copy",
-                str(output_path),
-            ]
-        )
+            ####################################################
+            # Podcast Audio
+            ####################################################
+            "-i",
+            str(podcast_audio),
 
-        return output_path
+            ####################################################
+            # Filters
+            ####################################################
+            "-vf",
+            video_filter,
+
+            ####################################################
+            # Streams
+            ####################################################
+            "-map",
+            "0:v:0",
+
+            "-map",
+            "1:a:0",
+
+            ####################################################
+            # Video
+            ####################################################
+            "-c:v",
+            "libx264",
+
+            "-preset",
+            "ultrafast",
+
+            "-crf",
+            "28",
+
+            "-pix_fmt",
+            "yuv420p",
+
+            ####################################################
+            # Audio
+            ####################################################
+            "-c:a",
+            "aac",
+
+            "-b:a",
+            "192k",
+
+            ####################################################
+            # Finish
+            ####################################################
+            "-shortest",
+
+            "-movflags",
+            "+faststart",
+
+            "-threads",
+            "0",
+
+            str(output_file),
+        ]
+    )
+
+        return output_file
+
+   

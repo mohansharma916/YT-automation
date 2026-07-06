@@ -37,7 +37,7 @@ class YoutubeService:
 
         options = {
 
-            "format": "bestvideo+bestaudio/best",
+            "format": "bv*[height<=720]+ba/b[height<=720]",
 
             "merge_output_format": "mp4",
 

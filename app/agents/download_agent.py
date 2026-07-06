@@ -43,20 +43,19 @@ class DownloadAgent(BaseAgent):
             duration=duration + 30,
         )
 
-    
+
+        print("=" * 80)
+        print("DOWNLOADED VIDEO :", background)
+        print("=" * 80)
 
         ####################################################
         # Remove Audio
         ####################################################
 
-        silent = Path("downloads/background.mp4")
 
-        self.ffmpeg.remove_audio(
-            background,
-            silent,
-        )
+       
 
-        context.background_video = silent
+        context.background_video = background
 
         return self.success(
             context,
