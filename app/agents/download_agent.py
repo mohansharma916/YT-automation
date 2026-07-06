@@ -1,62 +1,63 @@
 from pathlib import Path
 
-from yt_dlp import YoutubeDL
-
 from app.agents.base_agent import BaseAgent
 from app.models.job_context import JobContext
-from app.utils.logger import logger
+from app.services.ffmpeg_service import FFmpegService
+from app.services.youtube_service import YoutubeService
 
 
 class DownloadAgent(BaseAgent):
 
     name = "DownloadAgent"
 
-    def execute(self, context: JobContext):
+    def __init__(self):
+
+        self.ffmpeg = FFmpegService()
+        self.youtube = YoutubeService()
+
+    def execute(
+        self,
+        context: JobContext,
+    ):
 
         self.log_start()
 
-        if not context.youtube_url:
-            return self.failure(
-                context,
-                "YouTube URL not provided.",
-            )
+        if context.local_audio is None:
+            raise ValueError("Audio not found.")
 
-        output_dir = Path("downloads")
-        output_dir.mkdir(
-            parents=True,
-            exist_ok=True,
+        ####################################################
+        # Audio Duration
+        ####################################################
+
+        duration = self.ffmpeg.get_duration(
+            context.local_audio,
         )
 
-        logger.info(
-            f"Downloading video: {context.youtube_url}"
+        context.audio_duration = duration
+
+        ####################################################
+        # Download Background Video
+        ####################################################
+        background = self.youtube.download_background_video(
+            url=context.background_video_url,
+            duration=duration + 30,
         )
 
-        ydl_opts = {
-            "format": "bestvideo+bestaudio/best",
-            "outtmpl": str(output_dir / "%(title)s.%(ext)s"),
-            "merge_output_format": "mp4",
-        }
+    
 
-        with YoutubeDL(ydl_opts) as ydl:
+        ####################################################
+        # Remove Audio
+        ####################################################
 
-            info = ydl.extract_info(
-                context.youtube_url,
-                download=True,
-            )
+        silent = Path("downloads/background.mp4")
 
-            downloaded_video = Path(
-                ydl.prepare_filename(info)
-            ).with_suffix(".mp4")
-
-        context.downloaded_video = downloaded_video
-
-        context.metadata["title"] = info["title"]
-        context.metadata["video_id"] = info["id"]
-        context.metadata["channel"] = info["uploader"]
-        context.metadata["duration"] = info["duration"]
-
-        logger.info(
-            f"Downloaded video: {downloaded_video}"
+        self.ffmpeg.remove_audio(
+            background,
+            silent,
         )
 
-        return self.success(context)
+        context.background_video = silent
+
+        return self.success(
+            context,
+        )

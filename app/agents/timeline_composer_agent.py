@@ -8,16 +8,5 @@ class TimelineComposerAgent(BaseAgent):
 
     def execute(self, context: JobContext):
 
-        print()
-
-        print("HOOK")
-        print(context.timeline.hook)
-
-        print()
-
-        print("SHORTS")
-
-        for short in context.timeline.shorts.shorts:
-            print(short)
 
         return self.success(context)

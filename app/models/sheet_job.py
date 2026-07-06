@@ -8,6 +8,8 @@ class SheetJob:
 
     job_id: str
 
+    background_video: str
+
     audio_url: str
 
     status: str

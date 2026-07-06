@@ -13,7 +13,6 @@ class FFmpegService:
         )
 
         if result.returncode != 0:
-            print(result.stderr)
             raise RuntimeError(result.stderr)
 
     ########################################################
@@ -141,6 +140,37 @@ class FFmpegService:
     ########################################################
     # Audio
     ########################################################
+
+
+    def remove_audio(
+    self,
+    video_path: Path,
+    output_path: Path,):
+        
+
+        output_path.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+        self.run(
+        [
+            "ffmpeg",
+            "-y",
+
+            "-i",
+            str(video_path),
+
+            "-c:v",
+            "copy",
+
+            "-an",
+
+            str(output_path),
+        ]
+    )
+
+        return output_path
 
     def cut_audio(
         self,

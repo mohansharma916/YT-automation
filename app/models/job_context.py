@@ -32,3 +32,6 @@ class JobContext(BaseModel):
     final_audio: Path | None = None
     final_subtitle: Path | None = None
     video_parts: VideoParts | None = None
+    background_video: Path | None = None
+    audio_duration: float | None = None
+    background_video_url: str | None = None

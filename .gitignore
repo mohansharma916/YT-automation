@@ -4,3 +4,4 @@ output
 logs
 subtitles
 audio
+app/config/credentials.json

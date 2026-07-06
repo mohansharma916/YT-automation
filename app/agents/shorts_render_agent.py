@@ -25,6 +25,4 @@ class ShortsRenderAgent(BaseAgent):
             output_dir=Path("output/shorts"),
         )
 
-        print(outputs)
-
         return self.success(context)

@@ -16,6 +16,20 @@ class GoogleSheetService:
 
     MAX_RETRIES = 3
 
+    ####################################################
+    # Sheet Columns
+    ####################################################
+
+    JOB_ID = "A"
+    BACKGROUND = "B"
+    AUDIO = "C"
+    STATUS = "D"
+    UPLOADED = "E"
+    TITLE = "F"
+    DESCRIPTION = "G"
+    ERROR = "H"
+    UPDATED = "I"
+
     def __init__(self):
 
         credentials = Credentials.from_service_account_file(
@@ -99,10 +113,10 @@ class GoogleSheetService:
             start=2,
         ):
 
-            while len(row) < 8:
+            while len(row) < 9:
                 row.append("")
 
-            status = row[2].strip().upper()
+            status = row[3].strip().upper()
 
             if status not in ("", "PENDING"):
                 continue
@@ -110,7 +124,8 @@ class GoogleSheetService:
             return SheetJob(
                 row=index,
                 job_id=row[0].strip(),
-                audio_url=row[1].strip(),
+                background_video=row[1].strip(),
+                audio_url=row[2].strip(),
                 status=status,
             )
 
@@ -150,7 +165,7 @@ class GoogleSheetService:
 
         self.update(
             sheet_name,
-            f"H{row}",
+            f"{self.UPDATED}{row}",
             datetime.now().strftime(
                 "%d-%m-%Y %H:%M:%S"
             ),
@@ -169,7 +184,7 @@ class GoogleSheetService:
 
         self.update(
             sheet_name,
-            f"C{row}",
+            f"{self.STATUS}{row}",
             status,
         )
 
@@ -191,7 +206,7 @@ class GoogleSheetService:
 
         self.update(
             sheet_name,
-            f"D{row}",
+            f"{self.UPLOADED}{row}",
             url,
         )
 
@@ -208,7 +223,7 @@ class GoogleSheetService:
 
         self.update(
             sheet_name,
-            f"E{row}",
+            f"{self.TITLE}{row}",
             title,
         )
 
@@ -225,7 +240,7 @@ class GoogleSheetService:
 
         self.update(
             sheet_name,
-            f"F{row}",
+            f"{self.DESCRIPTION}{row}",
             description,
         )
 
@@ -242,7 +257,7 @@ class GoogleSheetService:
 
         self.update(
             sheet_name,
-            f"G{row}",
+            f"{self.ERROR}{row}",
             error,
         )
 
