@@ -1,11 +1,7 @@
 import json
 from pathlib import Path
-
-
-
 from app.models.subtitle import Subtitle
 from app.models.subtitle import SubtitleSegment
-from app.renderers.ass_renderer import ASSRenderer
 
 
 class SubtitleService:
@@ -191,30 +187,15 @@ class SubtitleService:
 
         )
 
-    # def save_ass(
-    #     self,
-    #     subtitle: Subtitle,
-    #     output: Path,
-    # ):
-
-    #     output.parent.mkdir(
-    #         parents=True,
-    #         exist_ok=True,
-    #     )
-
-    #     ASSRenderer().render(
-    #         subtitle,
-    #         output,
-    #     )
 
 
-  
 
 
     def export_ass(
     self,
     subtitle,
-    output_file: Path,):
+    output_file: Path,
+    vertical: bool):
         
 
         output_file.parent.mkdir(
@@ -222,48 +203,104 @@ class SubtitleService:
         exist_ok=True,
     )
 
-        lines = []
 
-        lines.append("[Script Info]")
-        lines.append("Title: Youtube Agent")
-        lines.append("ScriptType: v4.00+")
-        lines.append("PlayResX: 1920")
-        lines.append("PlayResY: 1080")
-        lines.append("WrapStyle: 2")
-        lines.append("ScaledBorderAndShadow: yes")
-        lines.append("")
+        print("=" * 50)
+        print("EXPORT ASS")
+        print("Vertical:", vertical)
+        print("Output:", output_file)
+        print("=" * 50)
 
-        lines.append("[V4+ Styles]")
-        lines.append(
-        "Format: Name,Fontname,Fontsize,PrimaryColour,SecondaryColour,OutlineColour,BackColour,Bold,Italic,Underline,StrikeOut,ScaleX,ScaleY,Spacing,Angle,BorderStyle,Outline,Shadow,Alignment,MarginL,MarginR,MarginV,Encoding"
-    )
+    ####################################################
+    # Style
+    ####################################################
 
-        lines.append(
-        "Style: Default,Poppins ExtraBold,90,&H00FFFFFF,&H0000FFFF,&H00000000,&H80000000,-1,0,0,0,100,100,0,0,1,5,0,5,0,0,0,1"
-    )
+        if vertical:
 
-        lines.append("")
-        lines.append("[Events]")
-        lines.append(
-        "Format: Layer,Start,End,Style,Name,MarginL,MarginR,MarginV,Effect,Text"
-    )
+        
+
+            play_res_x = 1080
+            play_res_y = 1920
+
+            x = 540
+            y = 900
+
+            style = self.short_style()
+
+            words_per_line = 18
+
+        else:
+
+            play_res_x = 1920
+            play_res_y = 1080
+
+            x = 960
+            y = 430
+
+            words_per_line = 35
+
+            style = self.long_style()
+
+    ####################################################
+    # Header
+    ####################################################
+
+        lines = [
+
+            "[Script Info]",
+            "Title: Youtube Agent",
+            "ScriptType: v4.00+",
+            f"PlayResX: {play_res_x}",
+            f"PlayResY: {play_res_y}",
+            "ScaledBorderAndShadow:yes",
+            "",
+
+            "[V4+ Styles]",
+
+            "Format: Name,Fontname,Fontsize,PrimaryColour,SecondaryColour,OutlineColour,BackColour,Bold,Italic,Underline,StrikeOut,ScaleX,ScaleY,Spacing,Angle,BorderStyle,Outline,Shadow,Alignment,MarginL,MarginR,MarginV,Encoding",
+
+            style,
+
+        "",
+
+        "[Events]",
+
+        "Format: Layer,Start,End,Style,Name,MarginL,MarginR,MarginV,Effect,Text",
+    ]
+
+    ####################################################
+    # Dialogue
+    ####################################################
 
         for segment in subtitle.segments:
 
-            text = self.format_text(segment.text)
+
+            text = self.wrap_words(
+            segment.text,
+            words_per_line,
+        )
 
             lines.append(
+
             "Dialogue: 0,"
+
             f"{self.ass_time(segment.start)},"
+
             f"{self.ass_time(segment.end)},"
+
             "Default,,0,0,0,,"
-            "{\\an5\\pos(960,430)\\fad(150,150)}"
+
+            f"{{\\an5\\pos({x},{y})\\fad(120,120)}}"
+
             f"{text}"
+
         )
 
         output_file.write_text(
+
         "\n".join(lines),
+
         encoding="utf-8",
+
     )
 
     def ass_time(
@@ -312,3 +349,70 @@ class SubtitleService:
         )
 
         return r"\N".join(result)
+    
+
+
+    def long_style(self):
+
+        return (
+        "Style: Default,"
+        "Noto Serif Devanagari ExtraBold,"
+        "98,"
+        "&H00FFFFFF,"
+        "&H0000FFFF,"
+        "&H00000000,"
+        "&H96000000,"
+        "-1,0,0,0,"
+        "100,100,0,0,"
+        "1,6,0,5,"
+        "0,0,0,1"
+    )
+
+
+    def short_style(self):
+
+         return (
+        "Style: Default,"
+        "Noto Serif Devanagari ExtraBold,"
+        "96",
+        "&H00FFFFFF,"
+        "&H0000FFFF,"
+        "&H00000000,"
+        "&H96000000,"
+        "-1,0,0,0,"
+        "100,100,0,0,"
+        "1,6,0,5,"
+        "0,0,0,1"
+    )
+
+
+    def wrap_words(
+    self,
+    text: str,
+    max_chars: int = 18,):
+        words = text.split()
+
+        lines = []
+        current = ""
+
+        for word in words:
+
+            candidate = word if not current else f"{current} {word}"
+
+            if len(candidate) <= max_chars:
+                current = candidate
+            else:
+                lines.append(current)
+                current = word
+
+            if current:
+                lines.append(current)
+
+    # Maximum 2 lines
+        if len(lines) > 2:
+            lines = [
+                " ".join(words[: len(words)//2]),
+                " ".join(words[len(words)//2 :]),
+            ]
+
+        return r"\N".join(lines)
