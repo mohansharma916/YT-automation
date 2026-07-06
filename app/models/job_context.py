@@ -11,8 +11,6 @@ from app.models.subtitle import Subtitle
 from app.models.video_parts import VideoParts
 
 
-class Transcript(BaseModel):
-    text: str
 
 
 class JobContext(BaseModel):

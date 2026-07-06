@@ -32,9 +32,6 @@ class RenderAgent(BaseAgent):
         if context.subtitle is None:
             raise ValueError("Subtitle missing.")
 
-        if context.hook is None:
-            raise ValueError("Hook missing.")
-
         if context.shorts is None:
             raise ValueError("Shorts missing.")
 

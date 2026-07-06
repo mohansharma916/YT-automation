@@ -8,7 +8,6 @@ from app.models.short import Shorts
 from app.models.subtitle import Subtitle, SubtitleSegment
 from app.models.transcript import Transcript
 from app.providers.base.ai_provider import AIProvider
-from app.models.hook import ViralHook
 
 
 class OpenAIProvider(AIProvider):
@@ -86,58 +85,7 @@ Transcript:
 
             return Subtitle.model_validate(data)
 
-    def find_hook(self, subtitle: Subtitle) -> ViralHook:
-
-        subtitle_json = json.dumps(
-            subtitle.model_dump(),
-            ensure_ascii=False,
-            indent=2,
-        )
-
-        prompt = f"""
-You are an expert viral content editor.
-
-Below is a subtitle JSON with timestamps.
-
-Find the SINGLE most viral hook.
-
-Rules:
-
-- Pick only ONE.
-- It should create maximum curiosity.
-- Prefer emotional or shocking moments.
-- Hook duration should be between 5 and 12 seconds.
-- Return ONLY JSON.
-
-Format:
-
-{{
-    "start": 0.0,
-    "end": 0.0,
-    "hook": "...",
-    "reason": "...",
-    "score": 95
-}}
-
-Subtitle:
-
-{subtitle_json}
-        """
-
-        response = self.client.responses.create(
-            model=settings.chat_model,
-            input=prompt,
-        )
-
-        content = response.output_text.strip()
-
-        if content.startswith("```"):
-            content = content.replace("```json", "").replace("```", "").strip()
-
-        data = json.loads(content)
-
-        return ViralHook.model_validate(data)
-
+ 
     def generate_metadata(
         self,
         subtitle: Subtitle,

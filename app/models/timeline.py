@@ -13,6 +13,4 @@ class Timeline(BaseModel):
 
     duration: float
 
-    hook: ViralHook | None = None
-
     shorts: Shorts | None = None
