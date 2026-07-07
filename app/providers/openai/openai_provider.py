@@ -44,32 +44,32 @@ class OpenAIProvider(AIProvider):
     ) -> Subtitle:
 
         prompt = f"""
-You are an expert subtitle editor.
+        You are an expert subtitle editor.
 
-Split the following transcript into subtitles.
+        Split the following transcript into subtitles.
 
-Rules:
+        Rules:
 
-- Maximum 7 words per subtitle.
-- Keep natural sentence flow.
-- Don't change wording.
-- Don't summarize.
-- Return ONLY valid JSON.
+        - Maximum 7 words per subtitle.
+        - Keep natural sentence flow.
+        - Don't change wording.
+        - Don't summarize.
+        - Return ONLY valid JSON.
 
-Format:
+        Format:
 
-{{
-    "segments":[
         {{
-            "text":"..."
+            "segments":[
+                {{
+                    "text":"..."
+                }}
+            ]
         }}
-    ]
-}}
 
-Transcript:
+        Transcript:
 
-{transcript.text}
-"""
+        {transcript.text}
+        """
 
         response = self.client.responses.create(
             model=settings.chat_model,
@@ -83,75 +83,23 @@ Transcript:
 
             data = json.loads(content)
 
-            return Subtitle.model_validate(data)
+        return Subtitle.model_validate(data)
 
  
-    def generate_metadata(
-        self,
-        subtitle: Subtitle,
-        shorts: Shorts,
-    ) -> Metadata:
-        subtitle_json = json.dumps(subtitle.model_dump(), ensure_ascii=False, indent=2)
-        shorts_json = json.dumps(
-            shorts.model_dump(),
-            ensure_ascii=False,
-            indent=2,
-        )
 
-        prompt = f"""
-        You are an expert YouTube SEO specialist.
+    def subtitle_to_text(
+    self,
+    subtitle: Subtitle,):
+        
 
-        Generate metadata for:
+     return "\n".join(
 
-        1. Long YouTube Video
-        2. Every Short.
+        segment.text
 
-        Rules:
+        for segment in subtitle.segments
 
-        - High CTR title
-        - SEO optimized description
-        - 10 relevant hashtags
-        - Return ONLY JSON
+    )
 
-        Format:
-
-        {{
-            "long_video": {{
-                "title": "...",
-                "description": "...",
-                "hashtags": []
-            }},
-            "shorts": [
-                {{
-                    "title": "...",
-                    "description": "...",
-                    "hashtags": []
-                }}
-            ]
-        }}
-
-        Subtitle:
-
-        {subtitle_json}
-
-        Shorts:
-
-        {shorts_json}
-        """
-
-        response = self.client.responses.create(
-            model=settings.chat_model,
-            input=prompt,
-        )
-
-        content = response.output_text.strip()
-
-        if content.startswith("```"):
-            content = content.replace("```json", "").replace("```", "").strip()
-
-        data = json.loads(content)
-
-        return Metadata.model_validate(data)
 
     def generate_shorts(
         self,
@@ -210,3 +158,143 @@ Subtitle JSON:
         data = json.loads(content)
 
         return Shorts.model_validate(data)
+    
+    def generate_metadata(
+    self,
+    long_subtitles: list[Subtitle],
+    short_subtitles: list[Subtitle],
+) -> Metadata:
+
+    ####################################################
+    # Build Prompt
+    ####################################################
+
+        long_text = []
+
+        for index, subtitle in enumerate(
+            long_subtitles,
+            start=1,):
+
+            long_text.append(
+            f"""
+            PART {index}
+            {self.subtitle_to_text(subtitle)}
+            """
+        )
+
+        short_text = []
+
+        for index, subtitle in enumerate(
+        short_subtitles,
+        start=1,):
+
+            short_text.append(
+
+            f"""
+            SHORT {index}
+
+            {self.subtitle_to_text(subtitle)}
+            """
+        )
+
+        prompt = f"""
+        You are one of the world's best YouTube SEO strategists.
+
+        You are given multiple LONG videos and multiple SHORT videos
+        generated from the same podcast.
+
+        Generate UNIQUE metadata for EACH ONE.
+
+        Rules
+
+    • Every Long title MUST be completely different.
+    • Every Short title MUST be completely different.
+    • Never repeat wording.
+    • Focus only on that clip.
+    • Long titles must end with "| Part X".
+    • Maximum title length: 95 characters.
+    • Description should be SEO friendly.
+    • Generate 15 hashtags.
+    • Generate 15 tags.
+    • Generate Thumbnail Text.
+    • Generate Thumbnail Prompt.
+    • Generate Hook Text for Shorts.
+
+    Return ONLY valid JSON.
+
+    JSON Format
+
+    {{
+    "long_videos":[
+        {{
+            "part":1,
+            "title":"",
+            "description":"",
+            "hashtags":[],
+            "tags":[],
+            "thumbnail_text":"",
+            "thumbnail_prompt":"",
+            "chapters":[],
+            "pinned_comment":""
+        }}
+    ],
+
+    "shorts":[
+        {{
+            "index":1,
+            "title":"",
+            "description":"",
+            "hashtags":[],
+            "tags":[],
+            "hook_text":"",
+            "thumbnail_text":""
+        }}
+    ]
+}}
+
+    LONG VIDEOS
+
+    {"".join(long_text)}
+
+--------------------------------
+
+SHORTS
+
+    {"".join(short_text)}
+
+    """
+
+    ####################################################
+    # OpenAI
+    ####################################################
+
+        response = self.client.responses.create(
+        model=settings.chat_model,
+        input=prompt,
+    )
+
+        content = response.output_text.strip()
+
+        if content.startswith("```"):
+           content = (
+            content
+            .replace("```json", "")
+            .replace("```", "")
+            .strip())
+           
+           print("=" * 80)
+           print("RAW AI RESPONSE")
+           print("=" * 80)
+           print(response.output_text)
+           print("=" * 80)
+
+        data = json.loads(content)
+
+        #    print("=" * 80)
+        #    print("PARSED JSON")
+        #    print("=" * 80)
+        #    print(json.dumps(data, indent=4, ensure_ascii=False))
+
+        
+
+        return Metadata.model_validate(data)

@@ -5,43 +5,95 @@ from app.models.metadata import Metadata
 
 
 class MetadataService:
+
+    def __init__(self):
+
+        self.output = Path("metadata")
+
+        self.output.mkdir(
+            parents=True,
+            exist_ok=True,
+        )
+
+    ####################################################
+    # Save Complete Metadata
+    ####################################################
+
     def save(
         self,
         metadata: Metadata,
     ):
 
-        long_dir = Path("output/long")
+        output = self.output / "metadata.json"
+
+        output.write_text(
+
+            json.dumps(
+
+                metadata.model_dump(),
+
+                indent=4,
+
+                ensure_ascii=False,
+
+            ),
+
+            encoding="utf-8",
+
+        )
+
+        ####################################################
+        # Long Videos
+        ####################################################
+
+        long_dir = self.output / "longs"
 
         long_dir.mkdir(
-            parents=True,
             exist_ok=True,
         )
 
-        (long_dir / "metadata.json").write_text(
-            json.dumps(
-                metadata.long_video.model_dump(),
-                indent=4,
-                ensure_ascii=False,
-            ),
-            encoding="utf-8",
-        )
+        for item in metadata.long_videos:
 
-        for index, short in enumerate(
-            metadata.shorts,
-            start=1,
-        ):
-            folder = Path("output/shorts") / f"short_{index}"
+            (long_dir / f"part_{item.part}.json").write_text(
 
-            folder.mkdir(
-                parents=True,
-                exist_ok=True,
+                json.dumps(
+
+                    item.model_dump(),
+
+                    indent=4,
+
+                    ensure_ascii=False,
+
+                ),
+
+                encoding="utf-8",
+
             )
 
-            (folder / "metadata.json").write_text(
+        ####################################################
+        # Shorts
+        ####################################################
+
+        short_dir = self.output / "shorts"
+
+        short_dir.mkdir(
+            exist_ok=True,
+        )
+
+        for item in metadata.shorts:
+
+            (short_dir / f"short_{item.index}.json").write_text(
+
                 json.dumps(
-                    short.model_dump(),
+
+                    item.model_dump(),
+
                     indent=4,
+
                     ensure_ascii=False,
+
                 ),
+
                 encoding="utf-8",
+
             )

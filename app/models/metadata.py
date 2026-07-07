@@ -1,17 +1,40 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
-class VideoMetadata(BaseModel):
+####################################################
+# Long Video Metadata
+####################################################
 
-    title: str
+class LongVideoMetadata(BaseModel):
 
-    description: str
+    part: int = 0
 
-    hashtags: list[str]
+    start: float = 0
 
+    end: float = 0
+
+####################################################
+# Short Metadata
+####################################################
+
+class ShortMetadata(BaseModel):
+
+    index: int = 0
+
+    start: float = 0
+
+    end: float = 0
+
+####################################################
+# Root Metadata
+####################################################
 
 class Metadata(BaseModel):
 
-    long_video: VideoMetadata
+    long_videos: list[LongVideoMetadata] = Field(
+        default_factory=list,
+    )
 
-    shorts: list[VideoMetadata]
+    shorts: list[ShortMetadata] = Field(
+        default_factory=list,
+    )

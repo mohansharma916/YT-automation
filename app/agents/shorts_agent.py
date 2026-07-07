@@ -14,8 +14,6 @@ class ShortsAgent(BaseAgent):
 
     def execute(self, context: JobContext):
 
-         shorts = self.provider.generate_shorts(
-        context.subtitle
-     )
+         shorts = self.provider.generate_shorts(context.subtitle)
          context.shorts = shorts
          return self.success(context)

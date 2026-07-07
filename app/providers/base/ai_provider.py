@@ -20,12 +20,6 @@ class AIProvider:
     ) -> Subtitle:
         raise NotImplementedError()
     
-    def generate_metadata(
-    self,
-    subtitle,
-    shorts,
-) -> Metadata:
-       raise NotImplementedError()
     
     def generate_shorts(
     self,

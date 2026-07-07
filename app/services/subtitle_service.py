@@ -374,7 +374,7 @@ class SubtitleService:
          return (
         "Style: Default,"
         "Noto Serif Devanagari ExtraBold,"
-        "96",
+        "96,"
         "&H00FFFFFF,"
         "&H0000FFFF,"
         "&H00000000,"
