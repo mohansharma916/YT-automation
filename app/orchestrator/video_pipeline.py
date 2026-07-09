@@ -1,5 +1,6 @@
 from app.agents.metadata_agent import MetadataAgent
 # from app.agents.upload_agent import UploadAgent
+from app.agents.subtitle_correction_agent import SubtitleCorrectionAgent
 from app.agents.timeline_agent import TimelineAgent
 from app.utils.logger import logger
 from app.agents.download_agent import DownloadAgent
@@ -16,6 +17,7 @@ class VideoPipeline:
         self.agents = [
             DownloadAgent(),
             TranscriptionAgent(),
+            SubtitleCorrectionAgent(),
             TimelineAgent(),
             ShortsAgent(),
             MetadataAgent(),

@@ -1,9 +1,7 @@
-
-
-from app.providers.openai.openai_provider import (
-    OpenAIProvider,
+from app.providers.openai.openai_provider import OpenAIProvider
+from app.providers.transcription.openai_provider import (
+    OpenAITranscriptionProvider,
 )
-from app.providers.transcription.deeogram_provider import DeepgramProvider
 
 
 class ProviderFactory:
@@ -11,7 +9,7 @@ class ProviderFactory:
     @staticmethod
     def transcription():
 
-        return DeepgramProvider()
+        return OpenAITranscriptionProvider()
 
     @staticmethod
     def llm():

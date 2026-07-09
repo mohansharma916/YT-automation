@@ -298,3 +298,106 @@ SHORTS
         
 
         return Metadata.model_validate(data)
+    
+
+
+
+    def correct_subtitles(
+    self,
+    subtitle: Subtitle) -> Subtitle:
+        
+
+        subtitle_json = json.dumps(
+        subtitle.model_dump(),
+        ensure_ascii=False,
+        indent=2)
+
+        prompt = f"""
+        You are an expert editor for Indian Hindi and Hinglish call recordings .
+        You are NOT a writer.
+        You are NOT an editor.
+        You are NOT allowed to improve sentences.
+
+        Your ONLY job is to fix obvious speech-to-text mistakes.
+
+        Your job is to improve Whisper subtitles.
+
+
+        Rules
+
+        - Keep EXACTLY the same number of subtitle segments.
+        - Never merge subtitles.
+        - Never split subtitles.
+        - Never change timestamps.
+        - Never invent new sentences.
+        - Preserve the meaning.
+        - Correct Hindi spelling.
+        - Correct Hinglish words if obvious.
+        - Add natural punctuation.
+        - Keep names unchanged.
+
+        Return ONLY JSON.
+
+        Format
+
+        {{
+            "segments":[
+                {{
+                    "text":"..."
+                }}
+            ]
+        }}
+
+        Subtitle JSON
+
+        {subtitle_json}
+        """
+
+        response = self.client.responses.create(
+
+        model=settings.chat_model,
+
+        input=prompt,
+
+    )
+
+        content = response.output_text.strip()
+
+        if content.startswith("```"):
+
+         content = (
+            content
+            .replace("```json", "")
+            .replace("```", "")
+            .strip()
+        )
+
+        data = json.loads(content)
+
+    ####################################################
+    # Preserve timestamps
+    ####################################################
+
+        corrected = []
+
+        for original, item in zip(
+        subtitle.segments,
+        data["segments"],):
+
+            corrected.append(
+
+            SubtitleSegment(
+
+                start=original.start,
+
+                end=original.end,
+
+                text=item["text"].strip(),
+
+            )
+
+        )
+
+        return Subtitle(
+        segments=corrected,
+    )
